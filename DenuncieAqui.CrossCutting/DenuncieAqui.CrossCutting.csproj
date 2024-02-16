@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DenuncieAqui.Application\DenuncieAqui.Application.csproj" />
-    <ProjectReference Include="..\DenuncieAqui.Domain\DenuncieAqui.Domain.csproj" />
     <ProjectReference Include="..\DenuncieAqui.Infrastructure\DenuncieAqui.Infrastructure.csproj" />
   </ItemGroup>
 

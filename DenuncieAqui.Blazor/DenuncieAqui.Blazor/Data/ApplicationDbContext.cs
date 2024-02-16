@@ -6,7 +6,7 @@ namespace DenuncieAqui.Blazor.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-        public DbSet<LivroExemplo>? LivroExemplos { get; set; }
+        public DbSet<LivroExemplo>? livroExemplos {  get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -14,6 +14,4 @@ namespace DenuncieAqui.Blazor.Data
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
     }
-
-   
 }

@@ -7,12 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DenuncieAqui.Domain\DenuncieAqui.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="EntitiesConfiguration\" />
-    <Folder Include="Repositories\" />
+    <None Remove="App.razor" />
+    <None Remove="Routes.razor" />
+    <None Remove="_Imports.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +25,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DenuncieAqui.Blazor\DenuncieAqui.Blazor\DenuncieAqui.Blazor.csproj" />
+    <ProjectReference Include="..\DenuncieAqui.Domain\DenuncieAqui.Domain.csproj" />
   </ItemGroup>
 
 </Project>

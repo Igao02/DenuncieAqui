@@ -1,7 +1,7 @@
 using DenuncieAqui.Blazor.Client.Pages;
 using DenuncieAqui.Blazor.Components;
-using DenuncieAqui.Blazor.Components.Account;
 using DenuncieAqui.Blazor.Data;
+using DenuncieAqui.Blazor.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
