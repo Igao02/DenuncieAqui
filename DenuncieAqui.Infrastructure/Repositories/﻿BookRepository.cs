@@ -4,29 +4,34 @@ using DenuncieAqui.Infrastructure.Data;
 
 namespace DenuncieAqui.Infrastructure.Repositories
 {
-    public class LivroExemploRepository : ILivroExemploRepository
+    public class BookRepository : IBook
 
     {
         private readonly ApplicationDbContext _context;
 
-        public LivroExemploRepository (ApplicationDbContext context)
+        public BookRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-        
-        public async Task<LivroExemplo?> AdicionarLivro(LivroExemplo livroExemplo)
+
+        public async Task<IBook?> AdicionarLivro(Book book)
         {
-            _context.LivroExemplos.Add(livroExemplo);
+            _context.Books.Add(book);
             await _context.SaveChangesAsync();
-            return livroExemplo;
+            return (IBook?)book;
         }
 
-        public Task<LivroExemplo> DeletarLivro(int id)
+        public Task<IBook> DeletarLivro(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<LivroExemplo>> ObterLivros()
+        public Task<IEnumerable<IBook>> ObterLivros()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Book>> IBook.ObterLivros()
         {
             throw new NotImplementedException();
         }

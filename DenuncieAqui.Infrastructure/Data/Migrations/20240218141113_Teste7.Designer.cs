@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DenuncieAqui.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240218011151_ThirdTest")]
-    partial class ThirdTest
+    [Migration("20240218141113_Teste7")]
+    partial class Teste7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,23 +25,17 @@ namespace DenuncieAqui.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Capa", b =>
+            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Book", b =>
                 {
-                    b.Property<string>("capaId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("capaId");
-
-                    b.ToTable("Capas");
-                });
-
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.LivroExemplo", b =>
-                {
-                    b.Property<int>("LivroId")
+                    b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LivroId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookId"));
+
+                    b.Property<string>("BookName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
@@ -49,18 +43,26 @@ namespace DenuncieAqui.Infrastructure.Migrations
                     b.Property<string>("Cover")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LivroName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("PublishCompany")
-                        .HasMaxLength(150)
                         .HasColumnType("int");
 
-                    b.HasKey("LivroId");
+                    b.HasKey("BookId");
 
-                    b.ToTable("LivroExemplos");
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Capa", b =>
+                {
+                    b.Property<string>("capaId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("capaName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("capaId");
+
+                    b.ToTable("Capas");
                 });
 
             modelBuilder.Entity("DenuncieAqui.Infrastructure.Data.ApplicationUser", b =>

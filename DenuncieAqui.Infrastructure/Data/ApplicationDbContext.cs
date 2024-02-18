@@ -6,9 +6,10 @@ namespace DenuncieAqui.Infrastructure.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-        public DbSet<LivroExemplo> LivroExemplos { get; set; }
 
         public DbSet<Capa> Capas { get; set; }
+
+        public DbSet<Book> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

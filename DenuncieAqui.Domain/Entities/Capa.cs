@@ -11,5 +11,9 @@ namespace DenuncieAqui.Domain.Entities
     {
         [Key]
         public string capaId { get; set; }
+
+        public string capaName { get; set; }
+
+        public int lancamento { get; set; }
     }
 }
