@@ -3,7 +3,7 @@ using System;
 
 #nullable disable
 
-namespace DenuncieAqui.Blazor.Migrations
+namespace DenuncieAqui.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class CreateIdentitySchema : Migration

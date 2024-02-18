@@ -1,4 +1,4 @@
-using DenuncieAqui.Blazor.Data;
+using DenuncieAqui.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace DenuncieAqui.Blazor.Components.Account

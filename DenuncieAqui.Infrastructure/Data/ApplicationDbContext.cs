@@ -2,11 +2,13 @@ using DenuncieAqui.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DenuncieAqui.Blazor.Data
+namespace DenuncieAqui.Infrastructure.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-        public DbSet<LivroExemplo>? livroExemplos {  get; set; }
+        public DbSet<LivroExemplo> LivroExemplos { get; set; }
+
+        public DbSet<Capa> Capas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

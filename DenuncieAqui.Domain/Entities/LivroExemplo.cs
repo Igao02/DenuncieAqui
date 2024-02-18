@@ -1,15 +1,11 @@
 ﻿using DenuncieAqui.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace DenuncieAqui.Domain.Entities
 {
     public class LivroExemplo
     {
-
+        [Key]
         public int LivroId { get; set; }
         public string LivroName { get; set; }
         public string? Cover {  get; set; }
