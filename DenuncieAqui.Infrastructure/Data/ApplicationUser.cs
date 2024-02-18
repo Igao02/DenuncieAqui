@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace DenuncieAqui.Blazor.Data
+namespace DenuncieAqui.Infrastructure.Data
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser

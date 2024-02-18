@@ -1,18 +1,22 @@
-﻿using DenuncieAqui.Blazor.Data;
-using DenuncieAqui.Domain.Entities;
+﻿using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using DenuncieAqui.Infrastructure.Data;
 
 namespace DenuncieAqui.Infrastructure.Repositories
 {
-    internal class BookRepository : ILivroExemploRepository
+    public class LivroExemploRepository : ILivroExemploRepository
 
     {
         private readonly ApplicationDbContext _context;
+
+        public LivroExemploRepository (ApplicationDbContext context)
+        {
+            _context = context;
+        }
         
         public async Task<LivroExemplo?> AdicionarLivro(LivroExemplo livroExemplo)
         {
-            _context.livroExemplos.Add(livroExemplo);
+            _context.LivroExemplos.Add(livroExemplo);
             await _context.SaveChangesAsync();
             return livroExemplo;
         }
