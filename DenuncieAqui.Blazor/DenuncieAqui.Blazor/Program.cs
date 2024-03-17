@@ -8,7 +8,6 @@ using DenuncieAqui.Domain.Interfaces;
 using DenuncieAqui.Infrastructure.Repositories;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,7 +15,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-//Registrar os Serviços
+
 
 
 builder.Services.AddCascadingAuthenticationState();
@@ -41,6 +40,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+//Registrar os Serviços
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<IBook, BookRepository>();
 
