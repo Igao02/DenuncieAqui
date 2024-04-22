@@ -11,6 +11,8 @@ namespace DenuncieAqui.Infrastructure.Data
 
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<Reports> Reports { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

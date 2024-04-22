@@ -1,5 +1,6 @@
 ﻿using DenuncieAqui.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks.Dataflow;
 
 namespace DenuncieAqui.Domain.Entities
 {
@@ -12,6 +13,9 @@ namespace DenuncieAqui.Domain.Entities
         public int ? BookNumber { get; set; }
         public PublishCompany PublishCompany { get; set; }
         public Category Category { get; set; }
+
+        
+
 
         public Book(int bookId, string bookName, int? bookNumber, string? cover, PublishCompany publishCompany, Category category)
         {
