@@ -4,6 +4,7 @@ using DenuncieAqui.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DenuncieAqui.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423233049_Likes")]
+    partial class Likes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,34 +104,6 @@ namespace DenuncieAqui.Infrastructure.Migrations
                     b.HasIndex("ReportsId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Images", b =>
-                {
-                    b.Property<int>("ImagesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImagesId"));
-
-                    b.Property<string>("ImageContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReportsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImagesId");
-
-                    b.HasIndex("ReportsId");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("DenuncieAqui.Domain.Entities.Likes", b =>
@@ -401,17 +376,6 @@ namespace DenuncieAqui.Infrastructure.Migrations
                     b.Navigation("Reports");
                 });
 
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Images", b =>
-                {
-                    b.HasOne("DenuncieAqui.Domain.Entities.Reports", "Reports")
-                        .WithMany("Images")
-                        .HasForeignKey("ReportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reports");
-                });
-
             modelBuilder.Entity("DenuncieAqui.Domain.Entities.Likes", b =>
                 {
                     b.HasOne("DenuncieAqui.Infrastructure.Data.ApplicationUser", null)
@@ -488,8 +452,6 @@ namespace DenuncieAqui.Infrastructure.Migrations
             modelBuilder.Entity("DenuncieAqui.Domain.Entities.Reports", b =>
                 {
                     b.Navigation("Coments");
-
-                    b.Navigation("Images");
 
                     b.Navigation("Likes");
                 });

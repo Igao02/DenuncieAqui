@@ -4,6 +4,7 @@ using DenuncieAqui.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DenuncieAqui.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240422015655_Reports")]
+    partial class Reports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,93 +73,6 @@ namespace DenuncieAqui.Infrastructure.Migrations
                     b.ToTable("Capas");
                 });
 
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Comments", b =>
-                {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CommentCount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CommentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReportsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("ReportsId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Images", b =>
-                {
-                    b.Property<int>("ImagesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImagesId"));
-
-                    b.Property<string>("ImageContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReportsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImagesId");
-
-                    b.HasIndex("ReportsId");
-
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Likes", b =>
-                {
-                    b.Property<int>("LikeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("LikeDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReportsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LikeId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("ReportsId");
-
-                    b.ToTable("Likes");
-                });
-
             modelBuilder.Entity("DenuncieAqui.Domain.Entities.Reports", b =>
                 {
                     b.Property<int>("ReportsId")
@@ -172,6 +88,7 @@ namespace DenuncieAqui.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReportsDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReportsName")
@@ -179,6 +96,7 @@ namespace DenuncieAqui.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TypeReport")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ReportsId");
@@ -386,47 +304,6 @@ namespace DenuncieAqui.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Comments", b =>
-                {
-                    b.HasOne("DenuncieAqui.Infrastructure.Data.ApplicationUser", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("DenuncieAqui.Domain.Entities.Reports", "Reports")
-                        .WithMany("Coments")
-                        .HasForeignKey("ReportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reports");
-                });
-
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Images", b =>
-                {
-                    b.HasOne("DenuncieAqui.Domain.Entities.Reports", "Reports")
-                        .WithMany("Images")
-                        .HasForeignKey("ReportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reports");
-                });
-
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Likes", b =>
-                {
-                    b.HasOne("DenuncieAqui.Infrastructure.Data.ApplicationUser", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("DenuncieAqui.Domain.Entities.Reports", "Reports")
-                        .WithMany("Likes")
-                        .HasForeignKey("ReportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reports");
-                });
-
             modelBuilder.Entity("DenuncieAqui.Domain.Entities.Reports", b =>
                 {
                     b.HasOne("DenuncieAqui.Infrastructure.Data.ApplicationUser", null)
@@ -485,21 +362,8 @@ namespace DenuncieAqui.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DenuncieAqui.Domain.Entities.Reports", b =>
-                {
-                    b.Navigation("Coments");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("Likes");
-                });
-
             modelBuilder.Entity("DenuncieAqui.Infrastructure.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Likes");
-
                     b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
