@@ -13,6 +13,12 @@ namespace DenuncieAqui.Infrastructure.Data
 
         public DbSet<Reports> Reports { get; set; }
 
+        public DbSet<Comments> Comments { get; set; }
+
+        public DbSet<Likes> Likes { get; set; }
+
+        public DbSet<Images> Images { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
