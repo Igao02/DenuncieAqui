@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 {
-    internal class ReportsConfiguration : IEntityTypeConfiguration<Reports>
+    public class ReportsConfiguration : IEntityTypeConfiguration<Reports>
     {
         public void Configure(EntityTypeBuilder<Reports> builder)
         {

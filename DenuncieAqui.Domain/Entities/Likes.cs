@@ -14,13 +14,15 @@ namespace DenuncieAqui.Domain.Entities
 
         public DateTime? LikeDate { get; set; } = DateTime.Now;
 
+        public int? LikeCount { get; set; }
+
         public Reports Reports { get; set; }
 
-        public Likes(int likeId, DateTime? likeDate)
+        public Likes(int likeId, DateTime? likeDate, int? likeCount)
         {
             LikeId = likeId;
             LikeDate = likeDate;
-            
+            LikeCount = likeCount;
         }
     }
 }
