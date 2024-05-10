@@ -19,7 +19,7 @@ p {
     line-height: 1.6;
 }
 
-#backgroundImage {
+#Image {
     position: fixed;
     top: 70%;
     left: 90%;
@@ -30,5 +30,30 @@ p {
     background-repeat: no-repeat;
     z-index: -1;
 }
+
+/*#ImageBackground {
+    position: fixed;
+    top: 10%;
+    left: 90%;
+    width: 150px;
+    height: 150px;
+    background-image: url("/Image/Tema 1.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: -1;
+}*/
+
+#ImageBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/Image/Tema 3.jpeg");
+    background-size: cover; /* Faz a imagem cobrir toda a área */
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
 
 </style >
