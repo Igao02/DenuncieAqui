@@ -16,5 +16,7 @@ namespace DenuncieAqui.Application.Abstractions
         Task DeleteCommentsAsync (int id);
 
         Task EditeCommentsAsync (int id);
+
+        Task SumCommentsAsync(int id);
     }
 }

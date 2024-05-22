@@ -17,8 +17,8 @@ namespace DenuncieAqui.Application.Abstractions
 
         Task  RemoveReportsAsync(int id);
 
-        Task  EditReportsAsync(int id);
+        Task  EditReportsAsync(Reports reports);
 
-        Task SumCommentsAsync (int id);
+
     }
 }
