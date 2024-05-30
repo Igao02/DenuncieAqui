@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Application.Abstractions
 {
-    public interface IReports
+    public interface IReport
     {
-        Task <IEnumerable<Reports>> GetReportsAsync();
+        Task <IEnumerable<Report>> GetReportsAsync();
 
-        Task <Reports> GetReportAsync (int id);
+        Task <Report> GetReportAsync (int id);
 
-        Task <Reports?> AddReportsAsync(Reports reports);
+        Task <Report?> AddReportsAsync(Report reports);
 
         Task  RemoveReportsAsync(int id);
 
-        Task  EditReportsAsync(Reports reports);
+        Task  EditReportsAsync(Report reports);
 
 
     }

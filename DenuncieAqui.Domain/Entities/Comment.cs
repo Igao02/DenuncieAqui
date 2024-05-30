@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Domain.Entities
 {
-    public class Comments
+    public class Comment
     {
         [Key]
         public int CommentId { get; set; }
@@ -18,9 +18,9 @@ namespace DenuncieAqui.Domain.Entities
 
         public DateTime? CommentDate { get; set; } = DateTime.Now;
 
-        public Reports Reports { get; set; }
+        public Report Report { get; set; }
 
-        public Comments(int commentId, string commentContent, int? commentCount, DateTime? commentDate)
+        public Comment(int commentId, string commentContent, int? commentCount, DateTime? commentDate)
         {
             CommentId = commentId;
             CommentContent = commentContent;

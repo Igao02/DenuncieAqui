@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Domain.Entities
 {
-    public class Likes
+    public class Like
     {
         [Key]
         public int LikeId { get; set; }
@@ -16,9 +16,9 @@ namespace DenuncieAqui.Domain.Entities
 
         public int? LikeCount { get; set; }
 
-        public Reports Reports { get; set; }
+        public Report Report { get; set; }
 
-        public Likes(int likeId, DateTime? likeDate, int? likeCount)
+        public Like(int likeId, DateTime? likeDate, int? likeCount)
         {
             LikeId = likeId;
             LikeDate = likeDate;

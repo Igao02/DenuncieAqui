@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 {
-    public class LikesConfiguration : IEntityTypeConfiguration<Likes>
+    public class LikesConfiguration : IEntityTypeConfiguration<Like>
     {
-        public void Configure(EntityTypeBuilder<Likes> builder)
+        public void Configure(EntityTypeBuilder<Like> builder)
         {
             builder.HasKey(l => l.LikeId);
 

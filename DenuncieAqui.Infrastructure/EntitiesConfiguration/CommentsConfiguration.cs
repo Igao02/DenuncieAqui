@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 {
-    public class CommentsConfiguration : IEntityTypeConfiguration<Comments>
+    public class CommentsConfiguration : IEntityTypeConfiguration<Comment>
     {
-        public void Configure(EntityTypeBuilder<Comments> builder)
+        public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.HasKey(c => c.CommentId);
 

@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 {
-    public class ReportsConfiguration : IEntityTypeConfiguration<Reports>
+    public class ReportsConfiguration : IEntityTypeConfiguration<Report>
     {
-        public void Configure(EntityTypeBuilder<Reports> builder)
+        public void Configure(EntityTypeBuilder<Report> builder)
         {
-            builder.HasKey(r => r.ReportsId);
+            builder.HasKey(r => r.ReportId);
 
-            builder.Property(r => r.ReportsId)
+            builder.Property(r => r.ReportId)
                    .IsRequired();
 
             builder.Property(r => r.ReportsName)

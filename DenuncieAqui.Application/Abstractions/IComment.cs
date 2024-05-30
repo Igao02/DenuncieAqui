@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Application.Abstractions
 {
-    public interface IComments
+    public interface IComment
     {
-        Task <IEnumerable<Comments>> GetCommentsAsync ();
+        Task <IEnumerable<Comment>> GetCommentsAsync ();
 
-        Task <Comments> AddCommentsAsync(Comments comments);
+        Task <Comment> AddCommentsAsync(Comment comments);
 
         Task DeleteCommentsAsync (int id);
 

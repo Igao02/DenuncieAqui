@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 {
-    public class ImagesConfiguration : IEntityTypeConfiguration<Images>
+    public class ImagesConfiguration : IEntityTypeConfiguration<Image>
     {
-        public void Configure(EntityTypeBuilder<Images> builder)
+        public void Configure(EntityTypeBuilder<Image> builder)
         {
-            builder.HasKey(i => i.ImagesId);
+            builder.HasKey(i => i.ImageId);
 
             builder.Property(i => i.ImageName)
                 .HasMaxLength(50)

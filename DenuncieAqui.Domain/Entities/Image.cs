@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Domain.Entities
 {
-    public class Images
+    public class Image
     {
         [Key]
-        public int ImagesId { get; set; }
+        public int ImageId { get; set; }
 
         public string? ImageName { get; set; }
 
-        public string ImageUrl { get; set; } 
+        public string ImageUrl { get; set; }
 
         public string? ImageContent {  get; set; }
 
-        public Reports Reports { get; set; }
+        public Report Report { get; set; }
 
-        public Images(int imagesId, string? imageName, string imageUrl, string? imageContent)
+        public Image(int imagesId, string? imageName, string imageUrl, string? imageContent)
         {
-            ImagesId = imagesId;
+            ImageId = imagesId;
             ImageName = imageName;
             ImageUrl = imageUrl;
             ImageContent = imageContent;

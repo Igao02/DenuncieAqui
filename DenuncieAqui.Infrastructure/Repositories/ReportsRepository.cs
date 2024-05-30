@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.Repositories
 {
-    public class ReportsRepository : IReports
+    public class ReportsRepository : IReport
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,7 +19,7 @@ namespace DenuncieAqui.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Reports?> AddReportsAsync(Reports report)
+        public async Task<Report?> AddReportsAsync(Report report)
         {
             _context.AddAsync(report);
             await _context.SaveChangesAsync();
@@ -40,7 +40,7 @@ namespace DenuncieAqui.Infrastructure.Repositories
             }
         }
 
-        public async Task EditReportsAsync(Reports report)
+        public async Task EditReportsAsync(Report report)
         {
 
             if (report is not null)
@@ -54,10 +54,10 @@ namespace DenuncieAqui.Infrastructure.Repositories
             }
         }
 
-        public async Task<Reports> GetReportAsync(int id)
+        public async Task<Report> GetReportAsync(int id)
         {
 
-            var reports = await _context.Reports.FirstOrDefaultAsync(r => r.ReportsId == id);
+            var reports = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == id);
 
             if (reports is null)
             {
@@ -67,7 +67,7 @@ namespace DenuncieAqui.Infrastructure.Repositories
             return reports;
         }
 
-        public async Task<IEnumerable<Reports>> GetReportsAsync()
+        public async Task<IEnumerable<Report>> GetReportsAsync()
         {
 
             if ( _context is not null && _context.Reports is not null)
@@ -77,7 +77,7 @@ namespace DenuncieAqui.Infrastructure.Repositories
             }
             else
             {
-                return new List<Reports>();
+                return new List<Report>();
             }
         }
 

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Application.Abstractions
 {
-    public interface IImagens
+    public interface ILike
     {
-        Task<IEnumerable<Images>> GetImagesAsync();
+        Task<IEnumerable<Like>> GetLikesAsync();
 
-        Task <Images> AddImagesAsync(Images images);
+        Task <Like> AddLikesAsync(Like likes);
 
-        Task DeleteImagesAsync(int id);
+        Task RemoveLikesAsync(int id);
     }
 }

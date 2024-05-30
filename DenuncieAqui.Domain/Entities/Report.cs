@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace DenuncieAqui.Domain.Entities
 {
-    public class Reports
+    public class Report
     {
         [Key]
-        public int ReportsId { get; set; }
+        public int ReportId { get; set; }
 
         public string ReportsName { get; set; }
 
@@ -20,15 +20,15 @@ namespace DenuncieAqui.Domain.Entities
 
         public DateTime ReportsDate { get; set; } = DateTime.Now;
 
-        public List<Comments> Coments { get; set; } = new List<Comments>();
+        public List<Comment> Coments { get; set; } = new List<Comment>();
 
-        public List<Likes> Likes { get; set; } = new List<Likes>();
+        public List<Like> Likes { get; set; } = new List<Like>();
 
-        public List<Images> Images { get; set; } = new List<Images>();
+        public List<Image> Images { get; set; } = new List<Image>();
 
-        public Reports(int reportsId, string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate)
+        public Report(int reportsId, string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate)
         {
-            ReportsId = reportsId;
+            ReportId = reportsId;
             ReportsName = reportsName;
             TypeReport = typeReport;
             ReportsDescription = reportsDescription;
