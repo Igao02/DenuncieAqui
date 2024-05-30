@@ -6,11 +6,6 @@ namespace DenuncieAqui.Infrastructure.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-
-        public DbSet<Capa> Capas { get; set; }
-
-        public DbSet<Book> Books { get; set; }
-
         public DbSet<Report> Reports { get; set; }
 
         public DbSet<Comment> Comments { get; set; }

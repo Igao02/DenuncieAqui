@@ -21,6 +21,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.Blazor", "Denu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.Blazor.Client", "DenuncieAqui.Blazor\DenuncieAqui.Blazor.Client\DenuncieAqui.Blazor.Client.csproj", "{458B805B-A4E9-44BC-91EC-D3BE47EEF91C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{44B55B2C-3B1F-4240-B604-7EB48B8B46CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application & Domain", "2 - Application & Domain", "{C75AD0E4-FB55-4B75-98CB-2666AD29D62A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra & Shared", "3 - Infra & Shared", "{F6F59410-AF6B-40E0-8FAE-F837C6E9E237}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +60,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{688F9A2C-D040-447D-920D-E94B1D1CA083} = {C75AD0E4-FB55-4B75-98CB-2666AD29D62A}
+		{BECB1C13-83C4-4B26-B642-92122A607695} = {C75AD0E4-FB55-4B75-98CB-2666AD29D62A}
+		{26FE3301-9887-47B4-ACA9-275C7C6F1DE3} = {F6F59410-AF6B-40E0-8FAE-F837C6E9E237}
+		{FD2EDD8C-ECD2-4B44-B53C-82E3A3EA28BA} = {F6F59410-AF6B-40E0-8FAE-F837C6E9E237}
+		{CD31F2BC-7013-417B-9A7C-450213A572E8} = {44B55B2C-3B1F-4240-B604-7EB48B8B46CD}
+		{458B805B-A4E9-44BC-91EC-D3BE47EEF91C} = {44B55B2C-3B1F-4240-B604-7EB48B8B46CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9857311-34BB-4CE9-8FEE-D02187A5177F}

@@ -1,39 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DenuncieAqui.CrossCutting.Entities;
 
-namespace DenuncieAqui.Domain.Entities
+namespace DenuncieAqui.Domain.Entities;
+
+/// <summary>
+/// Denuncia (Entidade)
+/// </summary>
+public class Report : Entity
 {
-    public class Report
+    public Report()
     {
-        [Key]
-        public int ReportId { get; set; }
+        /* ORM purpose */
+    }
 
-        public string ReportsName { get; set; }
+    public string ReportName { get; protected set; }
 
-        public string? TypeReport {  get; set; }
+    public string? TypeReport {  get; set; }
 
-        public string? ReportsDescription { get; set; }
+    public string? ReportDescription { get; set; }
 
-        public DateTime ReportsDate { get; set; } = DateTime.Now;
+    public DateTime ReportsDate { get; set; } = DateTime.Now;
 
-        public List<Comment> Coments { get; set; } = new List<Comment>();
+    public virtual List<Comment> Comments { get; set; } = new List<Comment>();
 
-        public List<Like> Likes { get; set; } = new List<Like>();
+    public virtual List<Like> Likes { get; set; } = new List<Like>();
 
-        public List<Image> Images { get; set; } = new List<Image>();
+    public virtual List<Image> Images { get; set; } = new List<Image>();
 
-        public Report(int reportsId, string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate)
-        {
-            ReportId = reportsId;
-            ReportsName = reportsName;
-            TypeReport = typeReport;
-            ReportsDescription = reportsDescription;
-            ReportsDate = reportsDate;
-            
-        }
+    /*public Report(string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate) : base()
+    {
+        ReportName = reportsName;
+        TypeReport = typeReport;
+        ReportDescription = reportsDescription;
+        ReportsDate = reportsDate;
+    }*/
+
+    public void SetReportName(string reportName)
+    {
+        ReportName = reportName;
     }
 }

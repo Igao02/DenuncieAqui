@@ -1,30 +1,21 @@
 ﻿using DenuncieAqui.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 {
-    public class CommentsConfiguration : IEntityTypeConfiguration<Comment>
+    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
-            builder.HasKey(c => c.CommentId);
+            builder.HasKey(c => c.Id);
 
             builder.Property(c => c.CommentContent)
                 .HasMaxLength(350)
                 .IsRequired();
 
-            builder.Property(c => c.CommentCount);
-
             builder.Property(c => c.CommentDate)
                 .IsRequired();
-
-            
         }
     }
 }

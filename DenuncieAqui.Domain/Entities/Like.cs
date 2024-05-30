@@ -1,28 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DenuncieAqui.CrossCutting.Entities;
 
-namespace DenuncieAqui.Domain.Entities
+namespace DenuncieAqui.Domain.Entities;
+
+public class Like : Entity
 {
-    public class Like
+    public DateTime? LikeDate { get; set; } = DateTime.Now;
+
+    public Guid ReportId { get; set; }
+
+    public virtual Report Report { get; set; }
+
+    /*public Like(DateTime? likeDate, int? likeCount) : base()
     {
-        [Key]
-        public int LikeId { get; set; }
-
-        public DateTime? LikeDate { get; set; } = DateTime.Now;
-
-        public int? LikeCount { get; set; }
-
-        public Report Report { get; set; }
-
-        public Like(int likeId, DateTime? likeDate, int? likeCount)
-        {
-            LikeId = likeId;
-            LikeDate = likeDate;
-            LikeCount = likeCount;
-        }
-    }
+        LikeDate = likeDate;
+        LikeCount = likeCount;
+    }*/
 }
