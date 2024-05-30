@@ -34,17 +34,17 @@ namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 
             builder
                 .HasMany(_ => _.Likes)
-                .WithOne()
+                .WithOne(_ => _.Report)
                 .HasForeignKey(_ => _.ReportId);
 
             builder
                 .HasMany(_ => _.Images)
-                .WithOne()
+                .WithOne(_ => _.Report)
                 .HasForeignKey(_ => _.ReportId);
 
             builder
                 .HasMany(_ => _.Comments)
-                .WithOne()
+                .WithOne(_ => _.Report)
                 .HasForeignKey(_ => _.ReportId);
         }
     }

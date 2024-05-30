@@ -1,11 +1,9 @@
 using DenuncieAqui.Blazor.Components;
 using DenuncieAqui.Blazor.Components.Account;
+using DenuncieAqui.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using DenuncieAqui.Infrastructure.Data;
-using DenuncieAqui.Domain.Interfaces;
-using DenuncieAqui.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +40,6 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 //Registrar os Serviços
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-builder.Services.AddScoped<IBook, BookRepository>();
 
 var app = builder.Build();
 

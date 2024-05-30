@@ -1,4 +1,5 @@
 ﻿using DenuncieAqui.CrossCutting.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DenuncieAqui.Domain.Entities;
 
@@ -13,7 +14,7 @@ public class Comment : Entity
 
     public DateTime CommentDate { get; set; } = DateTime.Now;
 
-    public Guid ReportId { get; set; }
+    public virtual Guid ReportId { get; set; }
 
     public virtual Report Report { get; set; }
 
