@@ -6,12 +6,11 @@ namespace DenuncieAqui.Infrastructure.Data
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
-        public List<Reports> Reports { get; set; } = new List<Reports>();
+        public List<Report> Reports { get; set; } = new List<Report>();
 
-        public List<Comments> Comments { get; set; } = new List<Comments>();
+        public List<Comment> Comments { get; set; } = new List<Comment>();
 
-        public List<Likes> Likes { get; set; } = new List<Likes>();
-        
+        public List<Like> Likes { get; set; } = new List<Like>();
     }
 
 }
