@@ -22,7 +22,7 @@ public class ReportRepository : IReportRepository
     {
         await _context.AddAsync(report);
 
-        //await this.SaveChangesAsync(); #TODO: Decidir sobre o SaveChanges
+        await _context.SaveChangesAsync(); 
 
         return report;
     }
@@ -40,6 +40,4 @@ public class ReportRepository : IReportRepository
 
         return report;
     }
-
-    public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 }
