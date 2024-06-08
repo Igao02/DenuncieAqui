@@ -5,39 +5,46 @@
 
 <h1>Hello, world!</h1>
 
-<div class="post-container">
-    <div class="post-header">
+<div id="post-container">
+    <div id="post-header">
         <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
-        <div class="username">Richard Romero</div>
+        <div id="username">Richard Romero</div>
     </div>
-    <div class="post-description">
-        <textarea class="form-control" placeholder="Write a caption..."></textarea>
+    <div id="post-description">
+        <p>
+            What is Lorem Ipsum?
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
+            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </p>
     </div>
-    <img src="/Images/post-image.jpg" alt="Post Image" class="post-image">
-    <div class="actions">
+    <img src="/Images/Slogan 2.jpeg" alt="Post Image" id="post-image">
+    <div id="actions">
         <button onclick="toggleCommentSection()">Comment</button>
         <button>Like</button>
     </div>
-    <div class="comment-section">
+    <div id="comment-section">
         <textarea rows="3" placeholder="Write a comment..."></textarea>
         <button>Submit</button>
     </div>
 </div>
 
-<div class="post-container">
-    <div class="post-header">
+<div id="post-container">
+    <div id="post-header">
         <img src="/Images/Slogan 6.jpg" alt="Profile Picture">
-        <div class="username">Barbara Gordon</div>
+        <div id="username">Barbara Gordon</div>
     </div>
-    <div class="post-description">
-        <textarea class="form-control" placeholder="Write a caption..."></textarea>
+    <div id="post-description">
+        <textarea id="form-control" placeholder="Write a caption..."></textarea>
     </div>
-    <img src="/Images/post-image.jpg" alt="Post Image" class="post-image">
-    <div class="actions">
+    <img src="/Images/Fundo 2.jpeg" alt="Post Image" id="post-image">
+    <div id="actions">
         <button onclick="toggleCommentSection()">Comment</button>
         <button>Like</button>
     </div>
-    <div class="comment-section-1">
+    <div id="comment-section-1">
         <textarea rows="3" placeholder="Write a comment..."></textarea>
         <button>Submit</button>
     </div>
@@ -46,7 +53,7 @@
 
 <script>
     function toggleCommentSection() {
-        var commentSection = document.querySelector('.comment-section');
+        var commentSection = document.querySelector('#comment-section');
         if (commentSection.style.display === 'none') {
             commentSection.style.display = 'block';
         } else {

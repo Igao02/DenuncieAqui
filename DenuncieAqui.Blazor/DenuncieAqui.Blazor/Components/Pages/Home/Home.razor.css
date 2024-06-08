@@ -1,43 +1,47 @@
-﻿.post-container {
+﻿#post-container {
     border: 1px solid #ccc;
     border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 10px; /* Reduzido de 20px para 10px */
+    margin-bottom: 10px; /* Reduzido de 20px para 10px */
+    max-width: 600px; /* Limita a largura máxima */
+    margin: 0 auto 10px; /* Centraliza o container e reduz o espaçamento inferior */
 }
 
-.post-header {
+#post-header {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Reduzido de 10px para 5px */
 }
 
- .post-header img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
-
-.username {
-    font-weight: bold;
+#post-header img {
+    width: 40px; /* Reduzido de 50px para 40px */
+    height: 40px; /* Reduzido de 50px para 40px */
+    border-radius: 50%;
+    margin-right: 5px; /* Reduzido de 10px para 5px */
 }
 
-.post-image {
+#post-image {
     max-width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Reduzido de 10px para 5px */
 }
 
-.actions {
+#username {
+    font-weight: bold;
+    font-size: 0.9em; /* Reduz a fonte para 90% do tamanho padrão */
+}
+
+#actions {
     display: flex;
     align-items: center;
+    margin-top: 5px; /* Adicionado para espaçamento */
 }
 
-.comment-section {
+#comment-section {
     display: none; /* Hide by default */
-    margin-top: 10px;
+    margin-top: 5px; /* Reduzido de 10px para 5px */
 }
 
-.comment-section-1 {
+#comment-section-1 {
     display: none; /* Hide by default */
-    margin-top: 10px;
+    margin-top: 5px; /* Reduzido de 10px para 5px */
 }
