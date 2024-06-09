@@ -5,6 +5,10 @@
 
 <h1>Hello, world!</h1>
 
+<div class="float-lg-end">
+    <a href="/create">Crie uma publicação</a>
+</div>
+
 <div id="post-container">
     <div id="post-header">
         <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
@@ -37,11 +41,18 @@
         <div id="username">Barbara Gordon</div>
     </div>
     <div id="post-description">
-        <textarea id="form-control" placeholder="Write a caption..."></textarea>
+        <p>
+            What is Lorem Ipsum?
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </p>
     </div>
     <img src="/Images/Fundo 2.jpeg" alt="Post Image" id="post-image">
     <div id="actions">
-        <button onclick="toggleCommentSection()">Comment</button>
+        <button onclick="toggleCommentSection1()">Comment</button>
         <button>Like</button>
     </div>
     <div id="comment-section-1">
@@ -58,6 +69,17 @@
             commentSection.style.display = 'block';
         } else {
             commentSection.style.display = 'none';
+        }
+    }
+</script>
+
+<script>
+    function toggleCommentSection1() {
+        var commentSection1 = document.querySelector('#comment-section-1');
+        if (commentSection1.style.display === 'none') {
+            commentSection1.style.display = 'block';
+        } else {
+            commentSection1.style.display = 'none';
         }
     }
 </script>
