@@ -1,5 +1,4 @@
 ﻿@media (min-width: 1800px) and (max-width: 2000px) {
-
     .full-page-background {
         position: relative;
         width: 80vw;
@@ -14,21 +13,32 @@
         top: 40%;
         left: 55%;
         transform: translate(-50%, -50%);
-        width: 65%; 
+        width: 65vw;
+        height: 30vw;
         background-color: rgba(255, 255, 255, 0.9);
         padding: 10px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .card img {
-        width: 750%; 
+    .card {
+        width: 64vw;
+        height: 57vh;
         border-radius: 10px 0 0 10px;
+    }
+
+    .card img {
+        width: 100vw;
+        height: 57vh;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .form{
+        margin-top: 5vw;
     }
 }
 
 @media (min-width: 1200px) and (max-width: 1600px) {
-
     .full-page-background {
         position: relative;
         width: 100%;
@@ -44,7 +54,7 @@
         left: 55%;
         transform: translate(-50%, -50%);
         height: 85vh;
-        width: 55%; 
+        width: 55%;
         background-color: rgba(255, 255, 255, 0.9);
         padding: 10px;
         border-radius: 10px;
@@ -57,24 +67,13 @@
         border-radius: 10px 0 0 10px;
     }
 
-    .card img{
-        width: 100vw; 
+    .card img {
+        width: 100vw;
         height: 82vh;
         border-radius: 10px 0 0 10px;
     }
-}
 
-
-@media (max-width: 480px) {
-    .content {
-        width: 90%; 
-        padding: 50px; 
-        max-height: 80vh; 
-        max-width: 50%; 
-    }
-
-    .card img {
-        width: 100%; 
-        max-width: 50%; 
+    .form {
+        margin-top: 7vw;
     }
 }
