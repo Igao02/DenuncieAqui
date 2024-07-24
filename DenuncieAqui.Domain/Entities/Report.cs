@@ -27,13 +27,13 @@ public class Report : Entity
 
     public virtual List<Image> Images { get; set; } = new List<Image>();
 
-    /*public Report(string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate) : base()
+    public Report(string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate) : base()
     {
         ReportName = reportsName;
         TypeReport = typeReport;
         ReportDescription = reportsDescription;
         ReportsDate = reportsDate;
-    }*/
+    }
 
     public void SetReportName(string reportName)
     {

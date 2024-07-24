@@ -12,10 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-
-
-
-
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
