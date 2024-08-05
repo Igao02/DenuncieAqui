@@ -14,7 +14,7 @@
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\" />
     <Folder Include="Mappings\" />
-    <Folder Include="UseCases\" />
+    <Folder Include="UseCases\ReportUseCase\" />
   </ItemGroup>
 
   <ItemGroup>
