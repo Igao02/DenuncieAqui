@@ -1,7 +1,9 @@
 using DenuncieAqui.Application.UseCases.ReportUseCase;
 using DenuncieAqui.Blazor.Components;
 using DenuncieAqui.Blazor.Components.Account;
+using DenuncieAqui.Domain.Repositories;
 using DenuncieAqui.Infrastructure.Data;
+using DenuncieAqui.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +39,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 //Registrar os Serviços
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<ReportUsecase>();
 
 var app = builder.Build();

@@ -16,11 +16,11 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DenuncieAqui.CrossCutting\DenuncieAqui.CrossCutting.csproj" />
+	  <Folder Include="Enums\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Enums\" />
+	  <ProjectReference Include="..\DenuncieAqui.DomainCore\DenuncieAqui.DomainCore.csproj" />
 	</ItemGroup>
 	
 </Project>
