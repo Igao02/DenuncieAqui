@@ -1,10 +1,5 @@
 ﻿using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DenuncieAqui.Application.UseCases.ReportUseCase
 {
