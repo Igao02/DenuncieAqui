@@ -13,7 +13,7 @@ public class Report : Entity
         /* ORM purpose */
     }
 
-    public string ReportName { get; protected set; }
+    public string ReportName { get;  set; }
 
     public string? TypeReport {  get; set; }
 
@@ -27,16 +27,11 @@ public class Report : Entity
 
     public virtual List<Image> Images { get; set; } = new List<Image>();
 
-    public Report(string reportsName, string? typeReport, string? reportsDescription, DateTime reportsDate) : base()
-    {
-        ReportName = reportsName;
-        TypeReport = typeReport;
-        ReportDescription = reportsDescription;
-        ReportsDate = reportsDate;
-    }
-
-    public void SetReportName(string reportName)
+    public Report(string reportName, string? typeReport, string? reportDescription, DateTime reportDate) : base()
     {
         ReportName = reportName;
+        TypeReport = typeReport;
+        ReportDescription = reportDescription;
+        ReportsDate = reportDate;
     }
 }
