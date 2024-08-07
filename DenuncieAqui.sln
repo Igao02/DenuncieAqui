@@ -8,13 +8,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.Domain", "DenuncieAqui.Domain\DenuncieAqui.Domain.csproj", "{BECB1C13-83C4-4B26-B642-92122A607695}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.Infrastructure", "DenuncieAqui.Infrastructure\DenuncieAqui.Infrastructure.csproj", "{26FE3301-9887-47B4-ACA9-275C7C6F1DE3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{688F9A2C-D040-447D-920D-E94B1D1CA083} = {688F9A2C-D040-447D-920D-E94B1D1CA083}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.CrossCutting", "DenuncieAqui.CrossCutting\DenuncieAqui.CrossCutting.csproj", "{FD2EDD8C-ECD2-4B44-B53C-82E3A3EA28BA}"
 	ProjectSection(ProjectDependencies) = postProject
-		{CD31F2BC-7013-417B-9A7C-450213A572E8} = {CD31F2BC-7013-417B-9A7C-450213A572E8}
+		{BECB1C13-83C4-4B26-B642-92122A607695} = {BECB1C13-83C4-4B26-B642-92122A607695}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.Blazor", "DenuncieAqui.Blazor\DenuncieAqui.Blazor\DenuncieAqui.Blazor.csproj", "{CD31F2BC-7013-417B-9A7C-450213A572E8}"
