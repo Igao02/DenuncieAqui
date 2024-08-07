@@ -1,4 +1,4 @@
-﻿using DenuncieAqui.CrossCutting.Entities;
+﻿using DenuncieAqui.DomainCore.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DenuncieAqui.Domain.Entities;

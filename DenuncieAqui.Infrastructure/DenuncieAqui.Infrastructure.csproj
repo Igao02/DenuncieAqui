@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DenuncieAqui.CrossCutting\DenuncieAqui.CrossCutting.csproj" />
     <ProjectReference Include="..\DenuncieAqui.Domain\DenuncieAqui.Domain.csproj" />
   </ItemGroup>
 
