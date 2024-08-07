@@ -1,29 +1,76 @@
 ﻿@page "/create"
-@* @attribute [StreamRendering] *@
+@using DenuncieAqui.Application.UseCases.ReportUseCase
+@using DenuncieAqui.Domain.Entities
+
+@inject ReportUsecase _reportUseCase
+@inject NavigationManager Navi
+
+@rendermode InteractiveServer
+
 
 <PageTitle>Create</PageTitle>
+<h1>Criar Novo Report</h1>
 
-<body>
-    <div class="full-page-background"></div>
-    <div id="post-container">
+<div class="full-page-background"></div>
+<div id="post-container">
+    <EditForm Model="@Model" OnValidSubmit="CreateReport">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
         <div id="user-profile">
             <img src="/Images/Slogan 5.jpeg" alt="User Avatar" id="user-avatar" class="mb-2">
             <span id="user-name">Richard Romero</span>
         </div>
-        <textarea id="post-textarea" placeholder="Digite sua publicação aqui"></textarea>
-        <div id="upload-image">
-            <input type="file" accept="/Images/*">
-        </div>
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="/Images/Slogan 2.jpeg" alt="Post Image" id="post-image">
-        </div>
-        <div id="buttons">
-            <button class="btn btn-primary">Publicar</button>
-            <button class="btn btn-danger">Cancelar</button>
-        </div>
-    </div>
-</body>
 
+        <div class="mb-3">
+            <label class="form-label">Nome da Denúncia</label>
+            <InputText @bind-Value="Model.ReportName" class="form-control" placeholder="Digite o nome da denúncia"></InputText>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tipo de Denúncia</label>
+            <InputSelect @bind-Value="Model.TypeReport" class="form-select">
+                <option value="" disabled>Selecione o tipo de denúncia</option>
+                <option value="Racismo">Racismo</option>
+                <option value="Discriminação feminina">Discriminação feminina</option>
+                <option value="Discriminação de sexualidade">Discriminação de sexualidade</option>
+            </InputSelect>
+        </div>
+
+        <div id="post-textarea">
+            <label class="form-label">Descrição da Denúncia</label>
+            <InputTextArea @bind-Value="Model.ReportDescription" class="form-control" placeholder="Digite a descrição da denúncia"></InputTextArea>
+        </div>
+
+        @* Se quiser adicionar a funcionalidade de upload de imagem depois *@
+        @*
+        <div id="upload-image">
+        <InputFile multiple OnChange="HandleFileSelection" />
+        </div>
+        *@
+
+        <div id="buttons">
+            <button type="submit" class="btn btn-primary">Publicar</button>
+            <button type="button" class="btn btn-danger" @onclick="Cancel">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    public Report Model { get; set; } = new Report();
+
+    private async Task CreateReport()
+    {
+        await _reportUseCase.CreateReportAsync(Model);
+        Navi.NavigateTo("/");
+    }
+
+    private void Cancel()
+    {
+        // Redireciona para a página anterior ou limpa o formulário
+        Navi.NavigateTo("/");
+    }
+}
 
 
 
