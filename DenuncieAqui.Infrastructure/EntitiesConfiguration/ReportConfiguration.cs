@@ -22,10 +22,12 @@ namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
 
             builder
                 .Property(r => r.TypeReport)
+                .IsRequired()
                 .HasMaxLength(50); 
 
             builder
                 .Property(r => r.ReportDescription)
+                .IsRequired()
                 .HasMaxLength(500); 
 
             builder

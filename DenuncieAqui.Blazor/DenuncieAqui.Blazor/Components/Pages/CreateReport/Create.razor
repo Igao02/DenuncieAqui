@@ -1,36 +1,39 @@
 ﻿@page "/create"
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Domain.Entities
+@using Microsoft.AspNetCore.Mvc
 
 @inject ReportUsecase _reportUseCase
 @inject NavigationManager Navi
-
 @rendermode InteractiveServer
 
-
 <PageTitle>Create</PageTitle>
-<h1>Criar Novo Report</h1>
-
 <div class="full-page-background"></div>
 <div id="post-container">
-    <EditForm Model="@Model" OnValidSubmit="CreateReport">
+    <div id="user-profile">
+        <img src="/Images/Slogan 5.jpeg" alt="User Avatar" id="user-avatar" class="mb-2">
+        <AuthorizeView>
+            <Authorized>
+                <NavLink class="nav-link" href="Account/Manage">
+                    <div id="user-name">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    </div>
+                </NavLink>
+            </Authorized>
+        </AuthorizeView>
+    </div>
+    <EditForm Model="@Model" OnValidSubmit="CreateReport" OnInvalidSubmit="Cancel">
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary></ValidationSummary>
-
-        <div id="user-profile">
-            <img src="/Images/Slogan 5.jpeg" alt="User Avatar" id="user-avatar" class="mb-2">
-            <span id="user-name">Richard Romero</span>
+        <div class="mb-3">
+            <label class="form-label">Nome da Publicação</label>
+            <InputText @bind-Value="Model.ReportName" class="form-control" placeholder="Digite o nome da Publicação"></InputText>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Nome da Denúncia</label>
-            <InputText @bind-Value="Model.ReportName" class="form-control" placeholder="Digite o nome da denúncia"></InputText>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Tipo de Denúncia</label>
+            <label class="form-label">Tipo de Publicação</label>
             <InputSelect @bind-Value="Model.TypeReport" class="form-select">
-                <option value="" disabled>Selecione o tipo de denúncia</option>
+                <option value="" disabled>Selecione o tipo de publicação</option>
                 <option value="Racismo">Racismo</option>
                 <option value="Discriminação feminina">Discriminação feminina</option>
                 <option value="Discriminação de sexualidade">Discriminação de sexualidade</option>
@@ -38,11 +41,10 @@
         </div>
 
         <div id="post-textarea">
-            <label class="form-label">Descrição da Denúncia</label>
-            <InputTextArea @bind-Value="Model.ReportDescription" class="form-control" placeholder="Digite a descrição da denúncia"></InputTextArea>
+            <label class="form-label">Descrição da publicação</label>
+            <InputTextArea @bind-Value="Model.ReportDescription" class="form-control" placeholder="Digite a descrição da publicação"></InputTextArea>
         </div>
 
-        @* Se quiser adicionar a funcionalidade de upload de imagem depois *@
         @*
         <div id="upload-image">
         <InputFile multiple OnChange="HandleFileSelection" />
@@ -59,15 +61,17 @@
 @code {
     public Report Model { get; set; } = new Report();
 
+    [HttpPost]
     private async Task CreateReport()
     {
         await _reportUseCase.CreateReportAsync(Model);
         Navi.NavigateTo("/");
     }
 
+    private string TypeReport { get; set; } = "";
+
     private void Cancel()
     {
-        // Redireciona para a página anterior ou limpa o formulário
         Navi.NavigateTo("/");
     }
 }
