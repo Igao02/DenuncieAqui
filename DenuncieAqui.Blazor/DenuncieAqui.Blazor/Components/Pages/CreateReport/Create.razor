@@ -1,11 +1,13 @@
 ﻿@page "/create"
+@using DenuncieAqui.Application.UseCases.ImageUseCase
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Domain.Entities
 @using Microsoft.AspNetCore.Mvc
 
-@inject ReportUsecase _reportUseCase
-@inject NavigationManager Navi
 @rendermode InteractiveServer
+@inject ReportUsecase _reportUseCase
+@inject ImageUseCase _imageUseCase
+@inject NavigationManager Navi
 
 <PageTitle>Create</PageTitle>
 <div class="full-page-background"></div>
@@ -45,11 +47,10 @@
             <InputTextArea @bind-Value="Model.ReportDescription" class="form-control" placeholder="Digite a descrição da publicação"></InputTextArea>
         </div>
 
-        @*
-        <div id="upload-image">
-        <InputFile multiple OnChange="HandleFileSelection" />
+        <div id="upload-image" class="mb-3">
+            <label class="form-label">Upload de Imagens</label>
+            <InputFile multiple OnChange="HandleSelectedFiles" />
         </div>
-        *@
 
         <div id="buttons">
             <button type="submit" class="btn btn-primary">Publicar</button>
@@ -60,15 +61,45 @@
 
 @code {
     public Report Model { get; set; } = new Report();
+    public Image ModelImage { get; set; } = new Image();
+    private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+
+ 
+    private void HandleSelectedFiles(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles().ToList();
+    }
 
     [HttpPost]
     private async Task CreateReport()
     {
+        
         await _reportUseCase.CreateReportAsync(Model);
+
+        foreach (var file in selectedFiles)
+        {
+            using var stream = file.OpenReadStream();
+            var formFile = new FormFile(stream, 0, file.Size, file.Name, file.Name)
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = file.ContentType
+                };
+
+            var imageUrl = await _imageUseCase.UploadImageAsync(formFile, ModelImage.Id, ModelImage.Report);
+
+            // Cria e adiciona um novo objeto Image ao modelo
+            var imageModel = new Image
+                {
+                    ImageUrl = ModelImage.ImageUrl,
+                    ImageDate = DateTime.UtcNow,
+                    ReportId = Model.Id
+                };
+            
+        }
+
         Navi.NavigateTo("/");
     }
 
-    private string TypeReport { get; set; } = "";
 
     private void Cancel()
     {

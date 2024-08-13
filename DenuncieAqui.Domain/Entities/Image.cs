@@ -17,11 +17,12 @@ public class Image : Entity
 
     public virtual Report Report { get; set; }
 
-    public Image(string imageUrl, DateTime imageDate, Guid reportId, Report report): base()
+    public Image(string imageUrl, DateTime imageDate, Guid reportId, Report report) : base()
     {
         ImageUrl = imageUrl;
         ImageDate = imageDate;
         ReportId = reportId;
+        Report = report;
         Report = report;
     }
 }

@@ -1,16 +1,17 @@
 ﻿using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace DenuncieAqui.Application.UseCases.ImageUseCase
 {
     public class ImageUseCase
     {
         private readonly IImageRepository _imageRepository;
-        
         private readonly string _imageStoragePath;
 
-        public ImageUseCase(IImageRepository imageRepository, string imageStoragePath)
+        public ImageUseCase(IImageRepository imageRepository)
         {
             _imageRepository = imageRepository;
             _imageStoragePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReportImages", "Uploads");
@@ -28,36 +29,32 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
             return await _imageRepository.GetListAsync();
         }
 
-        //public async Task<Image> CreateImageAsync(Image image)
-        //{
-        //    return await _imageRepository.AddImageAsync(image);
-        //}
-
-        public async Task<Image> UploadAndSaveImageAsync(IFormFile file, Guid reportId)
+        [HttpPost]
+        public async Task<Image> UploadImageAsync(IFormFile file, Guid reportId, Report report)
         {
             if (file == null || file.Length == 0)
-                throw new ArgumentException("No file uploaded.");
+                throw new ArgumentException("File is empty");
 
-            // Crie o diretório se ele não existir
-            Directory.CreateDirectory(_imageStoragePath);
-
-            // Gere um nome de arquivo único
-            var fileName = Path.GetRandomFileName() + Path.GetExtension(file.FileName);
+            var fileName = Path.GetFileName(file.FileName);
             var filePath = Path.Combine(_imageStoragePath, fileName);
 
-            // Salve o arquivo no caminho especificado
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (IOException ex)
+            {
+                // Log e gerenciar a exceção
+                throw new Exception("Um erro ocorreu ao tentar salvar o arquivo", ex);
             }
 
-            // Crie uma nova entidade Image e salve no banco de dados
-            var image = new Image
-            {
-                ImageUrl = Path.Combine("ReportImages", "Uploads", fileName), // Caminho relativo
-                ImageDate = DateTime.UtcNow,
-                ReportId = reportId
-            };
+            var imageUrl = $"/ReportImages/Uploads/{file.FileName}";
+            var imageDate = DateTime.UtcNow;
+
+            var image = new Image(imageUrl, imageDate, reportId, report);
 
             return await _imageRepository.AddImageAsync(image);
         }
@@ -65,6 +62,17 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
         public async Task DeleteImageAsync(Guid id)
         {
             await _imageRepository.DeleteImageAsync(id);
+
+            //var image = await _imageRepository.GetImageByIdAsync(id);
+            //if (image != null)
+            //{
+            //    var filePath = Path.Combine(_imageStoragePath, image.ImageUrl);
+            //    if (File.Exists(filePath))
+            //    {
+            //        File.Delete(filePath);
+            //    }
+            //    await _imageRepository.DeleteImageAsync(id);
+            //}
         }
     }
 }
