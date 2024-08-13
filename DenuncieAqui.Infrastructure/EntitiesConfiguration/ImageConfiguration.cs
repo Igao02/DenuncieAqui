@@ -10,12 +10,11 @@ namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
         {
             builder.HasKey(i => i.Id);
 
-            builder.Property(i => i.ImageName)
-                .HasMaxLength(50)
+            builder.Property(i => i.ImageUrl)
+                .HasMaxLength(350)
                 .IsRequired();
 
-            builder.Property(i => i.ImageUrl)
-                .HasMaxLength(100)
+            builder.Property(i => i.ImageDate)
                 .IsRequired();
         }
     }
