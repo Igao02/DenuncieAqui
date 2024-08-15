@@ -4,7 +4,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">DenuncieAqui</a>
+        <a class="navbar-brand" href="">Talking About</a>
     </div>
 </div>
 
@@ -18,16 +18,16 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
+      @*   <div class="nav-item px-3">
             <NavLink class="nav-link" href="info">
                 <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Quem Somos?
             </NavLink>
-        </div>
+        </div> *@
 
-       @*  <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
+        @*  <div class="nav-item px-3">
+        <NavLink class="nav-link" href="auth">
+        <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
+        </NavLink>
         </div> *@
 
         <AuthorizeView>
@@ -37,6 +37,12 @@
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
                     </NavLink>
                 </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="create">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Criar Publicação
+                    </NavLink>
+                </div>
+
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />
@@ -60,16 +66,8 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-        
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="create">
-                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Criar Publicação
-                    </NavLink>
-                </div>
-            </Authorized>
-        </AuthorizeView>
+
+
     </nav>
 </div>
 

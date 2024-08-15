@@ -1,22 +1,26 @@
 ﻿using DenuncieAqui.DomainCore.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DenuncieAqui.Domain.Entities;
 
 public class Image : Entity
 {
-    public string ImageName { get; set; } = string.Empty;
+    public Image() 
+    {
+        //Empty
+    }
 
     public string ImageUrl { get; set; } = string.Empty;
 
+    public DateTime ImageDate { get; set; }
+
     public virtual Guid ReportId { get; set; }
 
-    public virtual Report Report { get; set; }
+    public virtual Report? Report { get; set; }
 
-    /*public Image(string? imageName, string imageUrl, string? imageContent) : base()
+    public Image(string imageUrl, DateTime imageDate, Guid reportId) : base()
     {
-        ImageName = imageName;
         ImageUrl = imageUrl;
-        ImageContent = imageContent;
-    }*/
+        ImageDate = imageDate;
+        ReportId = reportId;
+    }
 }

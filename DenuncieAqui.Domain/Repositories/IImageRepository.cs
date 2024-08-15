@@ -4,9 +4,11 @@ namespace DenuncieAqui.Domain.Repositories;
 
 public interface IImageRepository
 {
-    Task<IEnumerable<Image>> GetImagesAsync();
+    Task<IEnumerable<Image>> GetListAsync();
+
+    Task <Image?> GetImageAsync(Guid id);
 
     Task<Image> AddImageAsync(Image image);
 
-    Task DeleteImageAsync(int id);
+    Task DeleteImageAsync(Guid id);
 }

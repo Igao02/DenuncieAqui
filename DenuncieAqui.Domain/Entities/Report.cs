@@ -1,5 +1,4 @@
 ﻿using DenuncieAqui.DomainCore.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DenuncieAqui.Domain.Entities;
 
@@ -15,9 +14,9 @@ public class Report : Entity
 
     public string ReportName { get;  set; }
 
-    public string? TypeReport {  get; set; }
+    public string TypeReport {  get; set; }
 
-    public string? ReportDescription { get; set; }
+    public string ReportDescription { get; set; }
 
     public DateTime ReportsDate { get; set; } = DateTime.Now;
 
@@ -27,7 +26,7 @@ public class Report : Entity
 
     public virtual List<Image> Images { get; set; } = new List<Image>();
 
-    public Report(string reportName, string? typeReport, string? reportDescription, DateTime reportDate) : base()
+    public Report(string reportName, string typeReport, string reportDescription, DateTime reportDate) : base()
     {
         ReportName = reportName;
         TypeReport = typeReport;
