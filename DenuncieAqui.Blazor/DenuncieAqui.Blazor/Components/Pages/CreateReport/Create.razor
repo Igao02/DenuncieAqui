@@ -62,9 +62,9 @@
 @code {
     public Report Model { get; set; } = new Report();
     public Image ModelImage { get; set; } = new Image();
+
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
 
- 
     private void HandleSelectedFiles(InputFileChangeEventArgs e)
     {
         selectedFiles = e.GetMultipleFiles().ToList();
@@ -73,11 +73,24 @@
     [HttpPost]
     private async Task CreateReport()
     {
-        
+        // Cria o Report
         await _reportUseCase.CreateReportAsync(Model);
+
+        // Faz o upload das imagens
+        await UploadImages();
+
+        // Redireciona após a criação e upload
+        Navi.NavigateTo("/");
+    }
+
+    private async Task UploadImages()
+    {
+        var formFiles = new List<IFormFile>();
 
         foreach (var file in selectedFiles)
         {
+            var imageUrl = $"/ReportImages/Uploads/{file.Name}";
+
             using var stream = file.OpenReadStream();
             var formFile = new FormFile(stream, 0, file.Size, file.Name, file.Name)
                 {
@@ -85,21 +98,14 @@
                     ContentType = file.ContentType
                 };
 
-            var imageUrl = await _imageUseCase.UploadImageAsync(formFile, ModelImage.Id, ModelImage.Report);
-
-            // Cria e adiciona um novo objeto Image ao modelo
-            var imageModel = new Image
-                {
-                    ImageUrl = ModelImage.ImageUrl,
-                    ImageDate = DateTime.UtcNow,
-                    ReportId = Model.Id
-                };
-            
+            formFiles.Add(formFile);
         }
 
-        Navi.NavigateTo("/");
+        if (formFiles.Any())
+        {
+            await _imageUseCase.UploadImagesAsync(formFiles, Model.Id);
+        }
     }
-
 
     private void Cancel()
     {

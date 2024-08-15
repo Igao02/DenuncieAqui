@@ -29,35 +29,46 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
             return await _imageRepository.GetListAsync();
         }
 
-        [HttpPost]
-        public async Task<Image> UploadImageAsync(IFormFile file, Guid reportId, Report report)
+        public async Task<List<Image>> UploadImagesAsync(IEnumerable<IFormFile> files, Guid reportId)
         {
-            if (file == null || file.Length == 0)
-                throw new ArgumentException("File is empty");
+            var uploadedImages = new List<Image>();
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
 
-            var fileName = Path.GetFileName(file.FileName);
-            var filePath = Path.Combine(_imageStoragePath, fileName);
-
-            try
+            foreach (var file in files)
             {
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (file == null || file.Length == 0)
                 {
-                    await file.CopyToAsync(stream);
+                    throw new ArgumentException("Nenhum arquivo selecionado");
                 }
+
+                var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    throw new ArgumentException("Unsupported file type");
+                }
+
+                var fileName = Path.GetFileName(file.FileName);
+                var filePath = Path.Combine(_imageStoragePath, fileName);
+
+                //using (var stream = new FileStream(filePath, FileMode.Create))
+                //{
+                //    await file.CopyToAsync(stream);
+                //}
+
+                var imageUrl = $"/ReportImages/Uploads/{fileName}";
+                var imageDate = DateTime.UtcNow;
+
+                var image = new Image(imageUrl, imageDate, reportId);
+                //uploadedImages.Add(image);
+
+                var uploadImages = await _imageRepository.AddImageAsync(image);
             }
-            catch (IOException ex)
-            {
-                // Log e gerenciar a exceção
-                throw new Exception("Um erro ocorreu ao tentar salvar o arquivo", ex);
-            }
 
-            var imageUrl = $"/ReportImages/Uploads/{file.FileName}";
-            var imageDate = DateTime.UtcNow;
-
-            var image = new Image(imageUrl, imageDate, reportId, report);
-
-            return await _imageRepository.AddImageAsync(image);
+            return uploadedImages;
         }
+
+
 
         public async Task DeleteImageAsync(Guid id)
         {
