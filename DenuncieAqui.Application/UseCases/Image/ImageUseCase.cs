@@ -1,7 +1,10 @@
 ﻿using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Linq;
 
 
 namespace DenuncieAqui.Application.UseCases.ImageUseCase
@@ -10,6 +13,7 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
     {
         private readonly IImageRepository _imageRepository;
         private readonly string _imageStoragePath;
+        //private readonly IHostingEnvironment _hostingEnvironment;
 
         public ImageUseCase(IImageRepository imageRepository)
         {
@@ -51,24 +55,38 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
                 var fileName = Path.GetFileName(file.FileName);
                 var filePath = Path.Combine(_imageStoragePath, fileName);
 
-                //using (var stream = new FileStream(filePath, FileMode.Create))
-                //{
-                //    await file.CopyToAsync(stream);
-                //}
+                try
+                {
+                    // Cria um MemoryStream para armazenar o conteúdo do arquivo
+                    using var memoryStream = new MemoryStream();
+                    await file.CopyToAsync(memoryStream);
+                    var fileBytes = memoryStream.ToArray();
 
-                var imageUrl = $"/ReportImages/Uploads/{fileName}";
-                var imageDate = DateTime.UtcNow;
+                    // Salva o arquivo na pasta local
+                    using var fs = System.IO.File.Create(filePath);
+                    fs.Write(fileBytes, 0, fileBytes.Length);
+                    await memoryStream.CopyToAsync(fs);
 
-                var image = new Image(imageUrl, imageDate, reportId);
-                //uploadedImages.Add(image);
+                    // Cria a URL da imagem
+                    var imageUrl = $"/ReportImages/Uploads/{fileName}";
+                    var imageDate = DateTime.UtcNow;
 
-                var uploadImages = await _imageRepository.AddImageAsync(image);
+                    // Cria a entidade Image com o novo campo ConteudoArquivo
+                    var image = new Image(imageUrl, fileBytes, imageDate, reportId);
+
+                    // Adiciona a imagem à lista de imagens carregadas
+                    var uploadImages = await _imageRepository.AddImageAsync(image);
+                    uploadedImages.Add(uploadImages);
+                }
+                catch (Exception ex)
+                {
+                    // Log de erro
+                    throw new ArgumentException($"Erro ao salvar a imagem: {ex.Message}");
+                }
             }
 
             return uploadedImages;
         }
-
-
 
         public async Task DeleteImageAsync(Guid id)
         {

@@ -20,12 +20,24 @@ namespace DenuncieAqui.Infrastructure.Repositories
 
         public async Task<Image> AddImageAsync(Image image)
         {
-            await _context.AddAsync(image);
+            try
+            {
+                // Adiciona a imagem ao contexto
+                await _context.AddAsync(image);
 
-            await _context.SaveChangesAsync();
-            
-            return image;
+                // Salva as mudanças no banco de dados
+                await _context.SaveChangesAsync();
 
+                // Retorna a imagem adicionada
+                return image;
+            }
+            catch (Exception ex)
+            {
+                // Log detalhado de erro
+                throw new ArgumentException($"Erro (repositório infra) ao adicionar imagem: {ex.Message}");
+                throw new ArgumentException($"Stack Trace: {ex.StackTrace}");
+
+            }
         }
 
         public async Task DeleteImageAsync(Guid id)
