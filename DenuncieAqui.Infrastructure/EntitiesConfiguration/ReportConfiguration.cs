@@ -28,7 +28,7 @@ namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
             builder
                 .Property(r => r.ReportDescription)
                 .IsRequired()
-                .HasMaxLength(500); 
+                .HasMaxLength(2000); 
 
             builder
                 .Property(r => r.ReportsDate)

@@ -1,10 +1,6 @@
 ﻿using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 
 
 namespace DenuncieAqui.Application.UseCases.ImageUseCase
@@ -13,7 +9,6 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
     {
         private readonly IImageRepository _imageRepository;
         private readonly string _imageStoragePath;
-        //private readonly IHostingEnvironment _hostingEnvironment;
 
         public ImageUseCase(IImageRepository imageRepository)
         {
@@ -45,6 +40,11 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
                     throw new ArgumentException("Nenhum arquivo selecionado");
                 }
 
+                if (!Directory.Exists(_imageStoragePath))
+                {
+                    Directory.CreateDirectory(_imageStoragePath);
+                }
+
                 var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
                 if (!allowedExtensions.Contains(fileExtension))
@@ -57,30 +57,24 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
 
                 try
                 {
-                    // Cria um MemoryStream para armazenar o conteúdo do arquivo
                     using var memoryStream = new MemoryStream();
                     await file.CopyToAsync(memoryStream);
                     var fileBytes = memoryStream.ToArray();
 
-                    // Salva o arquivo na pasta local
                     using var fs = System.IO.File.Create(filePath);
                     fs.Write(fileBytes, 0, fileBytes.Length);
                     await memoryStream.CopyToAsync(fs);
 
-                    // Cria a URL da imagem
                     var imageUrl = $"/ReportImages/Uploads/{fileName}";
                     var imageDate = DateTime.UtcNow;
 
-                    // Cria a entidade Image com o novo campo ConteudoArquivo
                     var image = new Image(imageUrl, fileBytes, imageDate, reportId);
 
-                    // Adiciona a imagem à lista de imagens carregadas
                     var uploadImages = await _imageRepository.AddImageAsync(image);
                     uploadedImages.Add(uploadImages);
                 }
                 catch (Exception ex)
                 {
-                    // Log de erro
                     throw new ArgumentException($"Erro ao salvar a imagem: {ex.Message}");
                 }
             }
