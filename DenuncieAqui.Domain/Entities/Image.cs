@@ -19,15 +19,6 @@ public class Image : Entity
 
     public virtual Report? Report { get; set; }
 
-    //public Image(string imageUrl, byte[]? conteudoArquivo, DateTime imageDate, Guid reportId) : base()
-    //{
-    //    ImageUrl = imageUrl;
-    //    ConteudoArquivo = conteudoArquivo;
-    //    ImageDate = imageDate;
-    //    ReportId = reportId;
-
-    //}
-
     public Image(string imageUrl, byte[]? conteudoArquivo, DateTime imageDate, Guid reportId) : base()
     {
         ImageUrl = imageUrl;

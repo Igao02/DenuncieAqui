@@ -70,6 +70,7 @@
 @media (max-width: 2000px) {
     #post-container {
         margin-left: 450px;
+        margin-top: 100px;
         width: 600px;
     }
 
@@ -94,6 +95,7 @@
 @media (min-width: 1200px) and (max-width: 1600px) {
     #post-container {
         margin-left: 250px;
+        margin-top: 50px;
         width: 600px;
     }
 

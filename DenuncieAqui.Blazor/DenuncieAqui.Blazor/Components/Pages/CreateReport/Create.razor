@@ -73,13 +73,10 @@
     [HttpPost]
     private async Task CreateReport()
     {
-        // Cria o Report
         await _reportUseCase.CreateReportAsync(Model);
 
-        // Faz o upload das imagens
         await UploadImages();
 
-        // Redireciona após a criação e upload
         Navi.NavigateTo("/");
     }
 
@@ -89,37 +86,26 @@
 
         foreach (var file in selectedFiles)
         {
-            // Abre um stream para o arquivo
             using var stream = file.OpenReadStream();
 
-            // Cria um MemoryStream para armazenar o conteúdo do arquivo
             using var memoryStream = new MemoryStream();
 
-            // Copia o conteúdo do arquivo para o MemoryStream
             await stream.CopyToAsync(memoryStream);
 
-            // Obtém o conteúdo do arquivo como um array de bytes
             ModelImage.ConteudoArquivo = memoryStream.ToArray();
 
-            // Cria um FormFile a partir do stream, com as propriedades necessárias
             var formFile = new FormFile(new MemoryStream(ModelImage.ConteudoArquivo), 0, ModelImage.ConteudoArquivo.Length, file.Name, file.Name)
                 {
                     Headers = new HeaderDictionary(),
                     ContentType = file.ContentType
                 };
 
-            // Adiciona o FormFile à lista de arquivos
             formFiles.Add(formFile);
-
-            // Cria a URL da imagem (se necessário)
-            //var imageUrl = $"/ReportImages/Uploads/{file.Name}";
-
         }
 
 
         if (formFiles.Any())
         {
-            // Chama o método UploadImagesAsync passando os arquivos e o ID do relatório
             await _imageUseCase.UploadImagesAsync(formFiles, Model.Id);
         }
     }
