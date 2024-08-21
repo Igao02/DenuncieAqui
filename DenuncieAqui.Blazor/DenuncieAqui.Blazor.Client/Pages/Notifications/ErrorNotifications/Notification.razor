@@ -1,0 +1,27 @@
+﻿<div class="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+    @if (ShowNotification)
+    {
+        <div class="notification-card alert @AlertType">
+            @Message
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Message { get; set; } = "";
+
+    [Parameter]
+    public string AlertType { get; set; } = "alert-danger"; // Define o estilo padrão
+
+    private bool ShowNotification { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ShowNotification = true;
+
+        // Aguarda 3 segundos antes de esconder a notificação
+        await Task.Delay(1000);
+        ShowNotification = false;
+    }
+}
