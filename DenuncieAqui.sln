@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application & Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra & Shared", "3 - Infra & Shared", "{F6F59410-AF6B-40E0-8FAE-F837C6E9E237}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DenuncieAqui.DomainCore", "DenuncieAqui.DomainCore\DenuncieAqui.DomainCore.csproj", "{5212EF79-DEC4-4D06-821B-B94C6D806ABB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DenuncieAqui.DomainCore", "DenuncieAqui.DomainCore\DenuncieAqui.DomainCore.csproj", "{5212EF79-DEC4-4D06-821B-B94C6D806ABB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
