@@ -66,7 +66,7 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
                     await memoryStream.CopyToAsync(fs);
 
                     var imageUrl = $"/ReportImages/Uploads/{fileName}";
-                    var imageDate = DateTime.UtcNow;
+                    var imageDate = DateTime.Now;
 
                     var image = new Image(imageUrl, fileBytes, imageDate, reportId);
 
