@@ -3,11 +3,13 @@
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Domain.Entities
 @using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Components.Authorization
 
 @rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
 @inject ImageUseCase _imageUseCase
 @inject NavigationManager Navi
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Create</PageTitle>
 <div class="full-page-background"></div>
@@ -57,13 +59,36 @@
             <button type="button" class="btn btn-danger" @onclick="Cancel">Cancelar</button>
         </div>
     </EditForm>
+
+    @if (uploadInProgress)
+    {
+        <div class="alert alert-info" role="alert">
+            Upload de imagens em progresso...
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success" role="alert">
+            @successMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
 </div>
 
 @code {
     public Report Model { get; set; } = new Report();
     public Image ModelImage { get; set; } = new Image();
-
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    private bool uploadInProgress = false;
+    private string successMessage;
+    private string errorMessage;
 
     private void HandleSelectedFiles(InputFileChangeEventArgs e)
     {
@@ -73,9 +98,36 @@
     [HttpPost]
     private async Task CreateReport()
     {
-        await _reportUseCase.CreateReportAsync(Model);
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
 
-        await UploadImages();
+            if (user.Identity != null && user.Identity.IsAuthenticated)
+            {
+                var userName = user.Identity.Name;
+
+                Model.UserName = userName; 
+
+                await _reportUseCase.CreateReportAsync(Model);
+                await UploadImages();
+                successMessage = "Publicação criada com sucesso!";
+            }
+            else
+            {
+                errorMessage = "Usuário não autenticado.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao criar publicação: {ex.Message}";
+        }
+        finally
+        {
+            uploadInProgress = false;
+            selectedFiles.Clear();
+            StateHasChanged();
+        }
 
         Navi.NavigateTo("/");
     }
@@ -84,14 +136,13 @@
     {
         var formFiles = new List<IFormFile>();
 
+        uploadInProgress = true;
+
         foreach (var file in selectedFiles)
         {
             using var stream = file.OpenReadStream();
-
             using var memoryStream = new MemoryStream();
-
             await stream.CopyToAsync(memoryStream);
-
             ModelImage.ConteudoArquivo = memoryStream.ToArray();
 
             var formFile = new FormFile(new MemoryStream(ModelImage.ConteudoArquivo), 0, ModelImage.ConteudoArquivo.Length, file.Name, file.Name)
@@ -103,20 +154,14 @@
             formFiles.Add(formFile);
         }
 
-
         if (formFiles.Any())
         {
             await _imageUseCase.UploadImagesAsync(formFiles, Model.Id);
         }
     }
 
-
     private void Cancel()
     {
         Navi.NavigateTo("/");
     }
 }
-
-
-
-

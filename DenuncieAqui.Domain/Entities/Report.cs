@@ -24,6 +24,8 @@ public class Report : Entity
     [StringLength(2000, ErrorMessage = "O conteúdo é no máximo de 2000 caracteres")]
     public string ReportDescription { get; set; }
 
+    public string UserName { get; set; }
+
     public DateTime ReportsDate { get; set; } = DateTime.Now;
 
     public virtual List<Comment> Comments { get; set; } = new List<Comment>();
@@ -32,11 +34,12 @@ public class Report : Entity
 
     public virtual List<Image> Images { get; set; } = new List<Image>();
 
-    public Report(string reportName, string typeReport, string reportDescription, DateTime reportDate) : base()
+    public Report(string reportName, string typeReport, string reportDescription, DateTime reportDate, string userName) : base()
     {
         ReportName = reportName;
         TypeReport = typeReport;
         ReportDescription = reportDescription;
         ReportsDate = reportDate;
+        UserName = userName;
     }
 }
