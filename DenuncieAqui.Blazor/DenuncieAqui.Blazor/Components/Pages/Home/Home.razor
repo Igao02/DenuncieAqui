@@ -1,64 +1,55 @@
 ﻿@page "/"
 
+@using DenuncieAqui.Application.UseCases.ReportUseCase
+@using DenuncieAqui.Application.UseCases.ImageUseCase
+@using DenuncieAqui.Domain.Entities
+@inject ReportUsecase _reportUseCase
+@inject ImageUseCase _imageUseCase
+
 <PageTitle>Home</PageTitle>
 
-
-@* <div class="float-lg-end">
-    <a href="/create">Crie uma publicação</a>
-</div> *@
-
 <div id="post-container">
-    <div id="post-header">
-        <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
-        <div id="username">Richard Romero</div>
-    </div>
-    <div id="post-description">
-        <p>
-            What is Lorem Ipsum?
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
-            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-        </p>
-    </div>
-    <img src="/Images/Slogan 2.jpeg" alt="Post Image" id="post-image">
-    <div id="actions">
-        <button onclick="toggleCommentSection()">Comment</button>
-        <button>Like</button>
-    </div>
-    <div id="comment-section">
-        <textarea rows="3" placeholder="Write a comment..."></textarea>
-        <button>Submit</button>
-    </div>
-</div>
+    @if (reports != null && reports.Any())
+    {
+        @foreach (var report in reports)
+        {
+            <div class="post-item">
+                <div id="post-header">
+                    <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
+                    <div id="user-name">@report.UserName</div>
+                </div>
+                <div id="post-description">
+                    <p>@report.ReportDescription</p>
+                </div>
 
-<div id="post-container">
-    <div id="post-header">
-        <img src="/Images/Slogan 6.jpg" alt="Profile Picture">
-        <div id="username">Barbara Gordon</div>
-    </div>
-    <div id="post-description">
-        <p>
-            What is Lorem Ipsum?
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-        </p>
-    </div>
-    <img src="/Images/Fundo 2.jpeg" alt="Post Image" id="post-image">
-    <div id="actions">
-        <button onclick="toggleCommentSection1()">Comment</button>
-        <button>Like</button>
-    </div>
-    <div id="comment-section-1">
-        <textarea rows="3" placeholder="Write a comment..."></textarea>
-        <button>Submit</button>
-    </div>
-</div>
+                @if (report.Images != null && report.Images.Any())
+                {
+                    @foreach (var image in report.Images)
+                    {
+                        <img src="@image.ImageUrl" alt="Post Image" class="post-image">
+                    }
+                }
+                else
+                {
+                    <p>No images available for this report.</p>
+                }
 
+                <div id="actions">
+                    <button onclick="toggleCommentSection()">Comment</button>
+                    <button>Like</button>
+                </div>
+                <div id="comment-section" style="display:none;">
+                    <textarea rows="3" placeholder="Write a comment..."></textarea>
+                    <button>Submit</button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No reports available.</p>
+    }
+</div>
 
 <script>
     function toggleCommentSection() {
@@ -71,15 +62,19 @@
     }
 </script>
 
-<script>
-    function toggleCommentSection1() {
-        var commentSection1 = document.querySelector('#comment-section-1');
-        if (commentSection1.style.display === 'none') {
-            commentSection1.style.display = 'block';
-        } else {
-            commentSection1.style.display = 'none';
-        }
+@code {
+    public IEnumerable<Report> reports;
+    public IEnumerable<Image> images;
+
+    public Report Model { get; set; } = new Report();
+    public Image ModelImage { get; set; } = new Image();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Carrega as publicações ao inicializar a página
+        reports = await _reportUseCase.GetReportsAsync();
+        images = await _imageUseCase.GetImagesAsync();
     }
-</script>
+}
 
 
