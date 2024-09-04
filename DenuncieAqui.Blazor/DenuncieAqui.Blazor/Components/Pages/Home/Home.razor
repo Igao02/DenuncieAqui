@@ -7,7 +7,7 @@
 @inject ImageUseCase _imageUseCase
 
 <PageTitle>Home</PageTitle>
-
+<div class="full-page-background"></div>
 <div id="post-container">
     @if (reports != null && reports.Any())
     {
@@ -17,6 +17,9 @@
                 <div id="post-header">
                     <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
                     <div id="user-name">@report.UserName</div>
+                </div>
+                <div id="post-name">
+                    <p>@report.ReportName</p>
                 </div>
                 <div id="post-description">
                     <p>@report.ReportDescription</p>

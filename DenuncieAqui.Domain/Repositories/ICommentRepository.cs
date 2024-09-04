@@ -6,11 +6,13 @@ public interface ICommentRepository
 {
     Task<IEnumerable<Comment>> GetListAsync();
 
-    Task<Comment> AddAsync(Comment comments);
+    Task<Comment?> GetAsync(Guid id);
 
-    Task DeleteAsync(int id);
+    Task<Comment> AddAsync(Comment comment);
 
-    Task EditAsync(int id);
+    Task DeleteAsync(Guid id);
 
-    Task<int> SumCommentAsync(int id);
+    Task<Comment> EditAsync(Comment comment);
+
+    Task<int> SumCommentAsync(Guid id);
 }
