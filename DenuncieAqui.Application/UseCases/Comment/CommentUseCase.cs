@@ -1,15 +1,18 @@
 ﻿using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace DenuncieAqui.Application.UseCases.CommentUseCase;
 
 public class CommentUseCase
 {
     private readonly ICommentRepository _commentRepository;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-    public CommentUseCase(ICommentRepository commentRepository)
+    public CommentUseCase(ICommentRepository commentRepository, AuthenticationStateProvider authenticationStateProvider)
     {
         _commentRepository = commentRepository;
+        _authenticationStateProvider = authenticationStateProvider;
     }
 
     public async Task<IEnumerable<Comment>> GetCommentsAsync()
@@ -26,11 +29,27 @@ public class CommentUseCase
         return comment;
     }
 
-    public async Task<Comment> CreateAsync(Comment comment)
+    public async Task CreateCommentAsync(Guid reportId, string commentContent)
     {
-        var createComment = await _commentRepository.AddAsync(comment);
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        return createComment;
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+        }
+
+        var userName = user.Identity.Name;
+
+        var comment = new Comment
+        {
+            ReportId = reportId,
+            UserName = userName,
+            CommentContent = commentContent,
+            CommentDate = DateTime.Now
+        };
+
+        await _commentRepository.AddAsync(comment);
     }
 
     public async Task DeleteCommentAsync(Guid id)
