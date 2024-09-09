@@ -4,8 +4,6 @@
 @using DenuncieAqui.Application.UseCases.ImageUseCase
 @using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Domain.Entities
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.AspNetCore.Mvc
 @inject ReportUsecase _reportUseCase
 @inject ImageUseCase _imageUseCase
 @inject CommentUseCase _commentUseCase
@@ -46,18 +44,20 @@
                     <button>Like</button>
                 </div>
 
-                <EditForm Model="@commentModel" OnValidSubmit="() => SubmitComment(report.Id)" FormName="commentForm">
+                <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
                     <div class="mb-3">
-                        <label class="form-label">Comment</label>
-                        <InputTextArea @bind-Value="commentModel.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputTextArea>
-                        <ValidationMessage For="@(() => commentModel.CommentContent)" />
+                        <label class="form-label">Comentário</label>
+                        <InputText @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputText>
+                        <ValidationMessage For="@(() => Model.CommentContent)" />
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Enviar Comentário</button>
                 </EditForm>
+
+
 
                 @if (report.Comments != null && report.Comments.Any())
                 {
@@ -70,12 +70,13 @@
                         }
                     </div>
                 }
+
             </div>
         }
     }
     else
     {
-        <p>No reports available.</p>
+        <p>Não há denúncias disponíveis.</p>
     }
 </div>
 
@@ -98,7 +99,7 @@
     public IEnumerable<Image> images;
     public IEnumerable<Comment> comments;
 
-    public Comment commentModel { get; set; } = new Comment();
+    public Comment Model { get; set; } = new Comment();
     private string errorMessage;
     private string successMessage;
 
@@ -107,17 +108,18 @@
         reports = await _reportUseCase.GetReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
+        Model = new Comment();
     }
 
     private async Task SubmitComment(Guid reportId)
     {
         try
         {
-            // Chama o método do CommentUseCase diretamente, sem passar o UserName
-            await _commentUseCase.CreateCommentAsync(reportId, commentModel.CommentContent);
+            var commentContent = Model.CommentContent;
 
-            reports = await _reportUseCase.GetReportsAsync(); // Recarregar os relatórios
-            commentModel.CommentContent = string.Empty;
+            // Chama o método do CommentUseCase diretamente
+            await _commentUseCase.CreateCommentAsync(reportId, commentContent);
+
             successMessage = "Comentário adicionado com sucesso!";
             errorMessage = string.Empty;
         }
@@ -132,4 +134,5 @@
             successMessage = string.Empty;
         }
     }
+
 }

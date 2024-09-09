@@ -6,10 +6,11 @@ namespace DenuncieAqui.Domain.Entities
     {
         public Comment()
         {
-
+            //Empty
         }
 
-        public string? CommentContent { get; set; } = string.Empty; 
+        //[Required(ErrorMessage = "Conteúdo do comentário é necessário")]
+        public string? CommentContent { get; set; }
 
         public DateTime CommentDate { get; set; } = DateTime.Now;
         

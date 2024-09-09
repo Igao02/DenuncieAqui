@@ -41,7 +41,7 @@ public class CommentUseCase
 
         var userName = user.Identity.Name;
 
-        var comment = new Comment
+        var comments = new Comment
         {
             ReportId = reportId,
             UserName = userName,
@@ -49,7 +49,8 @@ public class CommentUseCase
             CommentDate = DateTime.Now
         };
 
-        await _commentRepository.AddAsync(comment);
+        await _commentRepository.AddAsync(comments);
+
     }
 
     public async Task DeleteCommentAsync(Guid id)

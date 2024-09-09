@@ -1,5 +1,6 @@
 ﻿using DenuncieAqui.DomainCore.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DenuncieAqui.Domain.Entities;
 
