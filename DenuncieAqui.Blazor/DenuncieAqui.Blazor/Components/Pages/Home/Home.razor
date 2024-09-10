@@ -1,9 +1,10 @@
 ﻿@page "/"
-
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Application.UseCases.ImageUseCase
 @using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Domain.Entities
+
+@rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
 @inject ImageUseCase _imageUseCase
 @inject CommentUseCase _commentUseCase
@@ -44,7 +45,7 @@
                     <button>Like</button>
                 </div>
 
-                <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
+                <EditForm Model="@Model" OnValidSubmit= "() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
@@ -56,8 +57,6 @@
 
                     <button type="submit" class="btn btn-primary">Enviar Comentário</button>
                 </EditForm>
-
-
 
                 @if (report.Comments != null && report.Comments.Any())
                 {
@@ -100,25 +99,21 @@
     public IEnumerable<Comment> comments;
 
     public Comment Model { get; set; } = new Comment();
-    private string errorMessage;
-    private string successMessage;
+    private string errorMessage = "";
+    private string successMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
         reports = await _reportUseCase.GetReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
-        Model = new Comment();
     }
 
     private async Task SubmitComment(Guid reportId)
     {
         try
         {
-            var commentContent = Model.CommentContent;
-
-            // Chama o método do CommentUseCase diretamente
-            await _commentUseCase.CreateCommentAsync(reportId, commentContent);
+            await _commentUseCase.CreateCommentAsync(reportId, Model.CommentContent);
 
             successMessage = "Comentário adicionado com sucesso!";
             errorMessage = string.Empty;
