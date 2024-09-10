@@ -50,12 +50,16 @@
     margin-top: 5px; 
 }
 
-#comment-section {
-    display: none; 
-    margin-top: 5px; 
+.comment-section {
+    margin-top: 10px;
 }
 
-#comment-section-1 {
-    display: none; 
-    margin-top: 5px; 
+.comment-section textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.comment-section button {
+    padding: 5px 10px;
 }

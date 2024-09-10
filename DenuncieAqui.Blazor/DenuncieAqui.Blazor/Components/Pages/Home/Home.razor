@@ -1,10 +1,14 @@
 ﻿@page "/"
-
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Application.UseCases.ImageUseCase
+@using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Domain.Entities
+
+@rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
 @inject ImageUseCase _imageUseCase
+@inject CommentUseCase _commentUseCase
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Home</PageTitle>
 <div class="full-page-background"></div>
@@ -38,46 +42,92 @@
                 }
 
                 <div id="actions">
-                    <button onclick="toggleCommentSection()">Comment</button>
                     <button>Like</button>
                 </div>
-                <div id="comment-section" style="display:none;">
-                    <textarea rows="3" placeholder="Write a comment..."></textarea>
-                    <button>Submit</button>
-                </div>
+
+                <EditForm Model="@Model" OnValidSubmit= "() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label class="form-label">Comentário</label>
+                        <InputText @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputText>
+                        <ValidationMessage For="@(() => Model.CommentContent)" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enviar Comentário</button>
+                </EditForm>
+
+                @if (report.Comments != null && report.Comments.Any())
+                {
+                    <div class="comment-section">
+                        @foreach (var comment in report.Comments)
+                        {
+                            <div class="comment-item">
+                                <p><strong>@comment.UserName:</strong> @comment.CommentContent</p>
+                            </div>
+                        }
+                    </div>
+                }
+
             </div>
         }
     }
     else
     {
-        <p>No reports available.</p>
+        <p>Não há denúncias disponíveis.</p>
     }
 </div>
 
-<script>
-    function toggleCommentSection() {
-        var commentSection = document.querySelector('#comment-section');
-        if (commentSection.style.display === 'none') {
-            commentSection.style.display = 'block';
-        } else {
-            commentSection.style.display = 'none';
-        }
-    }
-</script>
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
 
 @code {
     public IEnumerable<Report> reports;
     public IEnumerable<Image> images;
+    public IEnumerable<Comment> comments;
 
-    public Report Model { get; set; } = new Report();
-    public Image ModelImage { get; set; } = new Image();
+    public Comment Model { get; set; } = new Comment();
+    private string errorMessage = "";
+    private string successMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
-        // Carrega as publicações ao inicializar a página
         reports = await _reportUseCase.GetReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
+        comments = await _commentUseCase.GetCommentsAsync();
     }
+
+    private async Task SubmitComment(Guid reportId)
+    {
+        try
+        {
+            await _commentUseCase.CreateCommentAsync(reportId, Model.CommentContent);
+
+            successMessage = "Comentário adicionado com sucesso!";
+            errorMessage = string.Empty;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ocorreu um erro: {ex.Message}. Inner Exception: {ex.InnerException?.Message}";
+            successMessage = string.Empty;
+        }
+    }
+
 }
-
-

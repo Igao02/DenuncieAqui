@@ -1,3 +1,4 @@
+using DenuncieAqui.Application.UseCases.CommentUseCase;
 using DenuncieAqui.Application.UseCases.ImageUseCase;
 using DenuncieAqui.Application.UseCases.ReportUseCase;
 using DenuncieAqui.Blazor.Components;
@@ -42,8 +43,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IImageRepository, ImageRepository>();
+builder.Services.AddTransient<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ReportUsecase>();
 builder.Services.AddScoped<ImageUseCase>();
+builder.Services.AddScoped<CommentUseCase>();
 
 var app = builder.Build();
 
