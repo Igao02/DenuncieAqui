@@ -2,12 +2,14 @@
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Application.UseCases.ImageUseCase
 @using DenuncieAqui.Application.UseCases.CommentUseCase
+@using DenuncieAqui.Application.UseCases.LikeUseCase
 @using DenuncieAqui.Domain.Entities
 
 @rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
 @inject ImageUseCase _imageUseCase
 @inject CommentUseCase _commentUseCase
+@inject LikeUseCase _likeUseCase
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Home</PageTitle>
@@ -42,10 +44,10 @@
                 }
 
                 <div id="actions">
-                    <button>Like</button>
+                    <button @onclick="() => SubmitLike(report.Id)">Like</button>
                 </div>
 
-                <EditForm Model="@Model" OnValidSubmit= "() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
+                <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
@@ -97,6 +99,7 @@
     public IEnumerable<Report> reports;
     public IEnumerable<Image> images;
     public IEnumerable<Comment> comments;
+    public IEnumerable<Like> likes;
 
     public Comment Model { get; set; } = new Comment();
     private string errorMessage = "";
@@ -107,6 +110,7 @@
         reports = await _reportUseCase.GetReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
+        likes = await _likeUseCase.GetLikesAsync();
     }
 
     private async Task SubmitComment(Guid reportId)
@@ -130,4 +134,23 @@
         }
     }
 
+    private async Task SubmitLike(Guid reportId)
+    {
+        try
+        {
+            await _likeUseCase.AddLikeAsync(reportId);
+            successMessage = "Curtida adicionada com sucesso!";
+            errorMessage = string.Empty;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ocorreu um erro ao adicionar curtida: {ex.Message}";
+            successMessage = string.Empty;
+        }
+    }
 }
