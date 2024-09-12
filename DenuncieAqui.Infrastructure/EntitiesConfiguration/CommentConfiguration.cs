@@ -11,7 +11,7 @@ namespace DenuncieAqui.Infrastructure.EntitiesConfiguration
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.CommentContent)
-                //.IsRequired()
+                .IsRequired()
                 .HasMaxLength(1000);
                 
 

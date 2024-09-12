@@ -4,9 +4,11 @@ namespace DenuncieAqui.Domain.Repositories;
 
 public interface ILikeRepository
 {
+    Task<Like?> GetAsync(Guid id);
+
     Task<IEnumerable<Like>> GetLikesAsync();
 
-    Task <Like> AddLikesAsync(Like likes);
+    Task <Like> AddLikesAsync(Like like);
 
-    Task RemoveLikesAsync(int id);
+    Task RemoveLikesAsync(Guid id);
 }
