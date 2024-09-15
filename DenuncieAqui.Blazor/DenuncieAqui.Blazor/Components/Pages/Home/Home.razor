@@ -43,9 +43,7 @@
                     <p>No images available for this report.</p>
                 }
 
-                <div id="actions">
-                    <button @onclick="() => SubmitLike(report.Id)">Like</button>
-                </div>
+
 
                 <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
                     <DataAnnotationsValidator />
@@ -53,12 +51,19 @@
 
                     <div class="mb-3">
                         <label class="form-label">Comentário</label>
-                        <InputText @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputText>
+                        <InputTextArea @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputTextArea>
                         <ValidationMessage For="@(() => Model.CommentContent)" />
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Enviar Comentário</button>
+                    <div id="commentActions">
+                        <button id="commentButton" type="submit" class="btn btn-primary">Enviar Comentário</button>
+                    </div>
                 </EditForm>
+
+                <div id="actions">
+                    <button class="btn btn-primary" @onclick="() => SubmitLike(report.Id)">Like</button>
+                </div>
+
 
                 @if (report.Comments != null && report.Comments.Any())
                 {

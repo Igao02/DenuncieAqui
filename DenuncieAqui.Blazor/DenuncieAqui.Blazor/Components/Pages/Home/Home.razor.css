@@ -46,13 +46,29 @@
 
 #actions {
     display: flex;
-    align-items: center;
-    margin-top: 5px; 
+    justify-content: flex-start;
+    margin-top: 5px;
+    margin-bottom:-25px;
+    position: relative;
+    left: 165px;
+    top: -43px;
+}
+
+#likeButton {
+    position: relative;
+    left: 165px; 
+    top: -38px;  
 }
 
 .comment-section {
-    margin-top: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
 }
+
 
 .comment-section textarea {
     width: 100%;
