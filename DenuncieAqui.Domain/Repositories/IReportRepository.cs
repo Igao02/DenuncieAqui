@@ -14,5 +14,4 @@ public interface IReportRepository
 
     Task DeleteAsync(Guid id);
 
-    //Task SaveChangesAsync();
 }

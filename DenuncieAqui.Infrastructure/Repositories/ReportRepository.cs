@@ -32,6 +32,8 @@ public class ReportRepository : IReportRepository
         var report = await GetAsync(id);
 
         _context.Reports.Remove(report!);
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Report> EditAsync(Report report)

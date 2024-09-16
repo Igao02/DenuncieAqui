@@ -79,3 +79,17 @@
 .comment-section button {
     padding: 5px 10px;
 }
+
+.dropdown-menu {
+    display: none; /* Inicialmente oculto */
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    display: block; /* Exibe quando o estado for verdadeiro */
+}
