@@ -43,22 +43,24 @@
                     <p>No images available for this report.</p>
                 }
 
-                <div id="actions">
-                    <button @onclick="() => SubmitLike(report.Id)">Like</button>
-                </div>
-
                 <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
                     <div class="mb-3">
                         <label class="form-label">Comentário</label>
-                        <InputText @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputText>
+                        <InputTextArea @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputTextArea>
                         <ValidationMessage For="@(() => Model.CommentContent)" />
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Enviar Comentário</button>
+                    <div id="commentActions">
+                        <button id="commentButton" type="submit" class="btn btn-primary">Enviar Comentário</button>
+                    </div>
                 </EditForm>
+
+                <div id="actions">
+                    <button class="btn btn-primary" @onclick="() => SubmitLike(report.Id)">Like</button>
+                </div>
 
                 @if (report.Comments != null && report.Comments.Any())
                 {
@@ -77,7 +79,7 @@
     }
     else
     {
-        <p>Não há denúncias disponíveis.</p>
+        <p>Não há publicações disponíveis.</p>
     }
 </div>
 
@@ -138,8 +140,9 @@
     {
         try
         {
-            await _likeUseCase.AddLikeAsync(reportId);
-            successMessage = "Curtida adicionada com sucesso!";
+            await _likeUseCase.AddOrRemoveLikeAsync(reportId);
+
+            successMessage = "Ação de curtida realizada com sucesso!";
             errorMessage = string.Empty;
         }
         catch (UnauthorizedAccessException)
@@ -149,8 +152,11 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Ocorreu um erro ao adicionar curtida: {ex.Message}";
+            errorMessage = $"Ocorreu um erro ao processar a curtida: {ex.Message}";
             successMessage = string.Empty;
         }
     }
+
+
+
 }

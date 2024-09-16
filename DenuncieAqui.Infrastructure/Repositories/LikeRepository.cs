@@ -28,10 +28,19 @@ public class LikeRepository : ILikeRepository
 
     public async Task RemoveLikesAsync(Guid id)
     {
-        var likes = await GetAsync(id);
+        var like = await GetAsync(id);
 
-        _context.Likes.Remove(likes!);
+        if (like != null)
+        {
+            _context.Likes.Remove(like);
+            await _context.SaveChangesAsync(); 
+        }
+    }
 
+    public async Task<Like?> GetUserLikeAsync(string userName, Guid reportId)
+    {
+        return await _context.Likes
+            .FirstOrDefaultAsync(l => l.UserName == userName && l.ReportId == reportId);
     }
 
 }
