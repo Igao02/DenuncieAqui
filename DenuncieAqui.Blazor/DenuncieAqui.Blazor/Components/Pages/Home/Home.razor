@@ -43,8 +43,6 @@
                     <p>No images available for this report.</p>
                 }
 
-
-
                 <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
                     <DataAnnotationsValidator />
                     <ValidationSummary />
@@ -64,7 +62,6 @@
                     <button class="btn btn-primary" @onclick="() => SubmitLike(report.Id)">Like</button>
                 </div>
 
-
                 @if (report.Comments != null && report.Comments.Any())
                 {
                     <div class="comment-section">
@@ -82,7 +79,7 @@
     }
     else
     {
-        <p>Não há denúncias disponíveis.</p>
+        <p>Não há publicações disponíveis.</p>
     }
 </div>
 
@@ -143,8 +140,9 @@
     {
         try
         {
-            await _likeUseCase.AddLikeAsync(reportId);
-            successMessage = "Curtida adicionada com sucesso!";
+            await _likeUseCase.AddOrRemoveLikeAsync(reportId);
+
+            successMessage = "Ação de curtida realizada com sucesso!";
             errorMessage = string.Empty;
         }
         catch (UnauthorizedAccessException)
@@ -154,8 +152,11 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Ocorreu um erro ao adicionar curtida: {ex.Message}";
+            errorMessage = $"Ocorreu um erro ao processar a curtida: {ex.Message}";
             successMessage = string.Empty;
         }
     }
+
+
+
 }

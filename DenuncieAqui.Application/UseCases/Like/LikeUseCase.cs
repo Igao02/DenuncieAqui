@@ -3,6 +3,7 @@ using DenuncieAqui.Domain.Repositories;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace DenuncieAqui.Application.UseCases.LikeUseCase;
+
 public class LikeUseCase
 {
     private readonly ILikeRepository _likeRepository;
@@ -14,21 +15,17 @@ public class LikeUseCase
         _authenticationStateProvider = authenticationStateProvider;
     }
 
-   public async Task<IEnumerable<Like>> GetLikesAsync()
+    public async Task<IEnumerable<Like>> GetLikesAsync()
     {
-        var likes = await _likeRepository.GetLikesAsync();
-
-        return likes;
+        return await _likeRepository.GetLikesAsync();
     }
 
-    public async Task<Like?> GetLikeASync(Guid id)
+    public async Task<Like?> GetLikeAsync(Guid id)
     {
-        var likes = await _likeRepository.GetAsync(id);
-
-        return likes;
+        return await _likeRepository.GetAsync(id);
     }
 
-    public async Task AddLikeAsync(Guid reportId)
+    public async Task AddOrRemoveLikeAsync(Guid reportId)
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -40,21 +37,27 @@ public class LikeUseCase
 
         var userName = user.Identity.Name;
 
-        var like = new Like
+        var existingLike = await _likeRepository.GetUserLikeAsync(userName, reportId);
+
+        if (existingLike != null)
         {
-            LikeDate = DateTime.Now,
-            UserName = userName,
-            ReportId = reportId,
-        };
+            await _likeRepository.RemoveLikesAsync(existingLike.Id);
+        }
+        else
+        {
+            var newLike = new Like
+            {
+                LikeDate = DateTime.Now,
+                UserName = userName,
+                ReportId = reportId,
+            };
 
-        await _likeRepository.AddLikesAsync(like);
-
+            await _likeRepository.AddLikesAsync(newLike);
+        }
     }
 
     public async Task RemoveLike(Guid id)
     {
         await _likeRepository.RemoveLikesAsync(id);
     }
-
 }
-

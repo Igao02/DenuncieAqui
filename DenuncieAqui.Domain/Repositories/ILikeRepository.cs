@@ -11,4 +11,6 @@ public interface ILikeRepository
     Task <Like> AddLikesAsync(Like like);
 
     Task RemoveLikesAsync(Guid id);
+
+    Task<Like?> GetUserLikeAsync(string userName, Guid reportId);
 }
