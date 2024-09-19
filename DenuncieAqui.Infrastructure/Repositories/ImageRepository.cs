@@ -22,18 +22,14 @@ namespace DenuncieAqui.Infrastructure.Repositories
         {
             try
             {
-                // Adiciona a imagem ao contexto
                 await _context.AddAsync(image);
 
-                // Salva as mudanças no banco de dados
                 await _context.SaveChangesAsync();
 
-                // Retorna a imagem adicionada
                 return image;
             }
             catch (Exception ex)
             {
-                // Log detalhado de erro
                 throw new ArgumentException($"Erro (repositório infra) ao adicionar imagem: {ex.Message}");
                 throw new ArgumentException($"Stack Trace: {ex.StackTrace}");
 
@@ -45,6 +41,8 @@ namespace DenuncieAqui.Infrastructure.Repositories
             var image = await GetImageAsync(id);
 
             _context.Images.Remove(image!);
+
+           _context.SaveChanges();
         }
     }
 }

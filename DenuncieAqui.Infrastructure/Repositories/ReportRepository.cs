@@ -40,6 +40,10 @@ public class ReportRepository : IReportRepository
     {
         _context.Entry(report).State = EntityState.Modified;
 
-        return report;
+        // Salvar as alterações no banco de dados
+        await _context.SaveChangesAsync();
+
+        return report; // Retorna o relatório atualizado
     }
+
 }

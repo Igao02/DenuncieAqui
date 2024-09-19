@@ -81,7 +81,7 @@
 }
 
 .dropdown-menu {
-    display: none; /* Inicialmente oculto */
+    display: none; 
     position: absolute;
     background-color: white;
     border: 1px solid #ddd;
@@ -91,5 +91,5 @@
 }
 
 .dropdown-menu.show {
-    display: block; /* Exibe quando o estado for verdadeiro */
+    display: block; 
 }
