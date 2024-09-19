@@ -59,7 +59,35 @@ public class ReportUsecase
 
     public async Task<Report> UpdateReportAsync(Report report)
     {
-        var updateReport = await _reportRepository.EditAsync(report);
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+        }
+
+        var userName = user.Identity.Name;
+
+        var existingReport = await _reportRepository.GetAsync(report.Id);
+
+        if (existingReport == null)
+        {
+            throw new Exception("Publicação não encontrada.");
+        }
+
+        if (existingReport.UserName != userName)
+        {
+            throw new UnauthorizedAccessException("Usuário não autorizado.");
+        }
+
+        existingReport.ReportName = report.ReportName;
+        existingReport.ReportDescription = report.ReportDescription;
+        existingReport.TypeReport = report.TypeReport; 
+        existingReport.ReportsDate = DateTime.Now;
+
+        var updateReport = await _reportRepository.EditAsync(existingReport);
         return updateReport;
     }
+
 }

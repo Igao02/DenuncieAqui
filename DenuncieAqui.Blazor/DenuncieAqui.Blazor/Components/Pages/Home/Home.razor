@@ -35,29 +35,59 @@
                         {
                             <div class="dropdown-menu show">
                                 <button class="dropdown-item" @onclick="() => ConfirmDelete(report.Id)">Deletar publicação</button>
+                                <button class="dropdown-item" @onclick="() => EditReport(report)">Editar publicação</button>
                             </div>
                         }
                     </div>
-
                 </div>
 
-                <div id="post-name">
-                    <p>@report.ReportName</p>
-                </div>
-                <div id="post-description">
-                    <p>@report.ReportDescription</p>
-                </div>
-
-                @if (report.Images != null && report.Images.Any())
+                @if (isEditing && selectedReport != null)
                 {
-                    @foreach (var image in report.Images)
-                    {
-                        <img src="@image.ImageUrl" alt="Post Image" class="post-image">
-                    }
+                    <EditForm Model="selectedReport" OnValidSubmit="UpdateReport">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome da Publicação:</label>
+                            <InputText @bind-Value="selectedReport.ReportName" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Publicação</label>
+                            <InputSelect @bind-Value="selectedReport.TypeReport" class="form-select">
+                                <option value="" disabled>Selecione o tipo de publicação</option>
+                                <option value="Racismo">Discriminação racial</option>
+                                <option value="Discriminação feminina">Discriminação feminina</option>
+                                <option value="Discriminação de sexualidade">Discriminação de sexualidade</option>
+                            </InputSelect>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Descrição da Publicação:</label>
+                            <InputTextArea @bind-Value="selectedReport.ReportDescription" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancelar</button>
+                    </EditForm>
                 }
                 else
                 {
-                    <p>No images available for this report.</p>
+                    <div id="post-name">
+                        <p>@report.ReportName</p>
+                    </div>
+                    <div id="post-description">
+                        <p>@report.ReportDescription</p>
+                    </div>
+
+                    @if (report.Images != null && report.Images.Any())
+                    {
+                        @foreach (var image in report.Images)
+                        {
+                            <img src="@image.ImageUrl" alt="Post Image" class="post-image">
+                        }
+                    }
+                    else
+                    {
+                        <p>No images available for this report.</p>
+                    }
                 }
 
                 <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
@@ -65,7 +95,7 @@
                     <ValidationSummary />
 
                     <div class="mb-3">
-                        <label class="form-label">Comentário</label>
+                        <label class="form-label">Comentários: </label>
                         <InputTextArea @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputTextArea>
                         <ValidationMessage For="@(() => Model.CommentContent)" />
                     </div>
@@ -90,7 +120,6 @@
                         }
                     </div>
                 }
-
             </div>
         }
     }
@@ -123,8 +152,9 @@
     public Comment Model { get; set; } = new Comment();
     private string errorMessage = "";
     private string successMessage = "";
-
     private Dictionary<Guid, bool> dropdownState = new Dictionary<Guid, bool>();
+    private bool isEditing = false;
+    private Report selectedReport;
 
     protected override async Task OnInitializedAsync()
     {
@@ -138,12 +168,11 @@
     {
         if (!dropdownState.ContainsKey(reportId))
         {
-            dropdownState[reportId] = false; // Inicializa o estado como fechado
+            dropdownState[reportId] = false;
         }
 
-        dropdownState[reportId] = !dropdownState[reportId]; // Alterna o estado
+        dropdownState[reportId] = !dropdownState[reportId];
     }
-
 
     private async Task ConfirmDelete(Guid reportId)
     {
@@ -162,7 +191,7 @@
             await _reportUseCase.DeleteReportAsync(reportId);
 
             successMessage = "Publicação deletada com sucesso!";
-            reports = await _reportUseCase.GetReportsAsync(); // Atualiza a lista de reports
+            reports = await _reportUseCase.GetReportsAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -184,6 +213,7 @@
 
             successMessage = "Comentário adicionado com sucesso!";
             errorMessage = string.Empty;
+            Model.CommentContent = string.Empty;
         }
         catch (UnauthorizedAccessException)
         {
@@ -213,8 +243,51 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Ocorreu um erro ao processar a curtida: {ex.Message}. Inner Exception: {ex.InnerException?.Message}";
+            errorMessage = $"Erro ao curtir: {ex.Message}";
             successMessage = string.Empty;
         }
+    }
+
+    private void EditReport(Report report)
+    {
+        isEditing = true;
+        selectedReport = new Report
+            {
+                Id = report.Id,
+                ReportName = report.ReportName,
+                ReportDescription = report.ReportDescription,
+                TypeReport = report.TypeReport,
+                ReportsDate = DateTime.Now
+            };
+    }
+
+    private async Task UpdateReport()
+    {
+        try
+        {
+            await _reportUseCase.UpdateReportAsync(selectedReport);
+
+            successMessage = "Publicação editada com sucesso!";
+            errorMessage = string.Empty;
+            isEditing = false;
+            selectedReport = null;
+            reports = await _reportUseCase.GetReportsAsync();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao editar a publicação: {ex.Message}";
+            successMessage = string.Empty;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        isEditing = false;
+        selectedReport = null;
     }
 }
