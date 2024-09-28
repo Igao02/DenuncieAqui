@@ -80,10 +80,6 @@
     </div>
 </div>
 
-
-
-
-
 @code {
     private string? errorMessage;
 
@@ -134,10 +130,6 @@
 
     private sealed class InputModel
     {
-
-        // [EmailAddress]
-        // public string Email { get; set; } = "";
-
         [Required]
         [DataType(DataType.Text)]
         public string UserName { get; set; } = "";
