@@ -3,7 +3,9 @@
 @using DenuncieAqui.Application.UseCases.ImageUseCase
 @using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Application.UseCases.LikeUseCase
+@using DenuncieAqui.Application.ViewModels.Report
 @using DenuncieAqui.Domain.Entities
+@using DenuncieAqui.Domain.Repositories
 
 @rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
@@ -14,11 +16,11 @@
 
 <PageTitle>Home</PageTitle>
 <div class="full-page-background"></div>
-<div id="post-container">
-    @if (reports != null && reports.Any())
+@if (reports != null && reports.Any())
+{
+    @foreach (var report in reports)
     {
-        @foreach (var report in reports)
-        {
+        <div id="post-container">
             <div class="post-item">
                 <div id="post-header">
                     <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
@@ -41,7 +43,7 @@
                     </div>
                 </div>
 
-                @if (isEditing && selectedReport != null)
+                @if (report.IsEditing && selectedReport != null)
                 {
                     <EditForm Model="selectedReport" OnValidSubmit="UpdateReport">
                         <DataAnnotationsValidator />
@@ -121,13 +123,13 @@
                     </div>
                 }
             </div>
-        }
+        </div>
     }
-    else
-    {
-        <p>Não há publicações disponíveis.</p>
-    }
-</div>
+}
+else
+{
+    <p>Não há publicações disponíveis.</p>
+}
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
@@ -144,7 +146,7 @@
 }
 
 @code {
-    public IEnumerable<Report> reports;
+    public IEnumerable<ReportViewModel> reports;
     public IEnumerable<Image> images;
     public IEnumerable<Comment> comments;
     public IEnumerable<Like> likes;
@@ -154,7 +156,7 @@
     private string successMessage = "";
     private Dictionary<Guid, bool> dropdownState = new Dictionary<Guid, bool>();
     private bool isEditing = false;
-    private Report selectedReport;
+    private ReportViewModel selectedReport;
 
     protected override async Task OnInitializedAsync()
     {
@@ -248,20 +250,13 @@
         }
     }
 
-    private void EditReport(Report report)
+    private void EditReport(ReportViewModel report)
     {
-        isEditing = true;
-        selectedReport = new Report
-            {
-                Id = report.Id,
-                ReportName = report.ReportName,
-                ReportDescription = report.ReportDescription,
-                TypeReport = report.TypeReport,
-                ReportsDate = DateTime.Now
-            };
+        selectedReport = report;
+        selectedReport.IsEditing = true;
     }
 
-    private async Task UpdateReport() 
+    private async Task UpdateReport()
     {
         try
         {
