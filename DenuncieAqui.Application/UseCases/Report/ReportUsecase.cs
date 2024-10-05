@@ -1,10 +1,8 @@
-﻿using DenuncieAqui.Domain.Entities;
+﻿using DenuncieAqui.Application.ViewModels.Report;
+using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
 using DenuncieAqui.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Identity.Client;
-using System.Security.Claims;
 
 namespace DenuncieAqui.Application.UseCases.ReportUseCase;
 
@@ -21,11 +19,25 @@ public class ReportUsecase
         _context = context;
     }
 
-    public async Task<IEnumerable<Report>> GetReportsAsync()
+    public async Task<IEnumerable<ReportViewModel>> GetReportsAsync()
     {
         var reports = await _reportRepository.GetListAsync();
 
-        return reports;
+        var result = reports.Select(x => new ReportViewModel()
+        {
+            Id = x.Id,
+            ReportDescription = x.ReportDescription,
+            ReportName = x.ReportName,
+            ReportsDate = x.ReportsDate,
+            UserName = x.UserName,
+            Comments = x.Comments,
+            Images = x.Images,
+            Likes = x.Likes,
+            TypeReport = x.TypeReport,
+            IsEditing = false
+        }).ToList();
+
+        return result;
     }
 
     public async Task<Report?> GetAsync(Guid id)
@@ -45,7 +57,7 @@ public class ReportUsecase
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-       
+
         if (user.Identity == null || !user.Identity.IsAuthenticated)
         {
             throw new UnauthorizedAccessException("Usuário não autenticado.");
@@ -54,7 +66,7 @@ public class ReportUsecase
         var userName = user.Identity.Name;
         var report = await _reportRepository.GetAsync(reportId);
 
-        if(user.IsInRole("ADMIN") || report.UserName == userName)
+        if (user.IsInRole("ADMIN") || report.UserName == userName)
         {
             await _reportRepository.DeleteAsync(reportId);
         }
@@ -65,8 +77,7 @@ public class ReportUsecase
 
     }
 
-
-    public async Task<Report> UpdateReportAsync(Report report)
+    public async Task<Report> UpdateReportAsync(ReportViewModel report)
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -92,7 +103,7 @@ public class ReportUsecase
 
         existingReport.ReportName = report.ReportName;
         existingReport.ReportDescription = report.ReportDescription;
-        existingReport.TypeReport = report.TypeReport; 
+        existingReport.TypeReport = report.TypeReport;
         existingReport.ReportsDate = DateTime.Now;
 
         var updateReport = await _reportRepository.EditAsync(existingReport);
