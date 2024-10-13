@@ -2,7 +2,6 @@
 using System.Net.Mail;
 using System.Net;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using DenuncieAqui.Infrastructure.Data;
 
