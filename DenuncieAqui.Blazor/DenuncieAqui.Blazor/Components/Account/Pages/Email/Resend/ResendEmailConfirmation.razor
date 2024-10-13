@@ -6,8 +6,6 @@
 @using System.Text
 @using System.Text.Encodings.Web
 
-
-
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
@@ -45,7 +43,7 @@
         var user = await UserManager.FindByEmailAsync(Input.Email!);
         if (user is null)
         {
-            message = "Verification email sent. Please check your email.";
+            message = "Verification de email não enviada, usuário não encontrado.";
             return;
         }
 
@@ -57,7 +55,7 @@
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Verification email sent. Please check your email.";
+        message = "Verificação de email enviado. Por favor, cheque seu email.";
     }
 
     private sealed class InputModel
