@@ -38,6 +38,8 @@ public class CommentRepository : ICommentRepository
     {
         _context.Entry(comment).State = EntityState.Modified;
 
+        await _context.SaveChangesAsync();
+
         return comment;
     }
 
