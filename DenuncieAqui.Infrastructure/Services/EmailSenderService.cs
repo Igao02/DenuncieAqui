@@ -5,11 +5,11 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Identity;
 using DenuncieAqui.Infrastructure.Data;
 
-public class EmailSenderRepository : IEmailSender<ApplicationUser>
+public class EmailSenderService : IEmailSender<ApplicationUser>
 {
     private readonly IConfiguration _configuration;
 
-    public EmailSenderRepository(IConfiguration configuration)
+    public EmailSenderService(IConfiguration configuration)
     {
         _configuration = configuration;
     }
@@ -42,7 +42,7 @@ public class EmailSenderRepository : IEmailSender<ApplicationUser>
     public async Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
     {
         string subject = "Confirm your email";
-        string message = $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(confirmationLink)}'>link</a>";
+        string message = $"Por favor, confirme seu e-mail através desse link: <a href='{HtmlEncoder.Default.Encode(confirmationLink)}'>link</a>";
         await SendEmailAsync(email, subject, message);
     }
 

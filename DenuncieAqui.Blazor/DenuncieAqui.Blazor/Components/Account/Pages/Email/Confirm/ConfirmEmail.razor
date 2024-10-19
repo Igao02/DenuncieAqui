@@ -10,7 +10,7 @@
 
 <PageTitle>Confirm email</PageTitle>
 
-<h1>Confirm email</h1>
+<h1>Confirmação de E-mail</h1>
 <StatusMessage Message="@statusMessage" />
 
 @code {
@@ -27,9 +27,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine($"UserId: {UserId}, Code: {Code}");
         if (UserId is null || Code is null)
         {
-            RedirectManager.RedirectTo("");
+            RedirectManager.RedirectTo("/Account/AccessDenied");
         }
 
         var user = await UserManager.FindByIdAsync(UserId);

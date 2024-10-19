@@ -43,8 +43,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-//Registrar os Serviços
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, EmailSenderRepository>();
+//Registrar os Serviï¿½os
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, EmailSenderService>();
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IImageRepository, ImageRepository>();
 builder.Services.AddTransient<ICommentRepository, CommentRepository>();
