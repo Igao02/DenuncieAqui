@@ -12,7 +12,7 @@
 
 <PageTitle>Register confirmation</PageTitle>
 
-<h1>Confirmação de Registro da Conta</h1>
+@* <h1>Confirmação de Registro da Conta</h1> *@
 
 <StatusMessage Message="@statusMessage" />
 
@@ -25,7 +25,16 @@
 }
 else
 {
-    <p>Please check your email to confirm your account.</p>
+    <div class="full-page-background"></div>
+    <div class="center-card">
+        <div class="card email-confirmation-card">
+            <img class="card-img-top" alt="Email confirmation" />
+            <div class="card-body">
+                <h5 class="card-title">Verifique seu e-mail</h5>
+                <p class="card-text">Por favor, verifique seu e-mail para confirmar sua conta.</p>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
@@ -54,15 +63,5 @@ else
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             statusMessage = "Error finding user for unspecified email";
         }
-        @* else
-        {
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-            var userId = await UserManager.GetUserIdAsync(user);
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
-        } *@
     }
 }
