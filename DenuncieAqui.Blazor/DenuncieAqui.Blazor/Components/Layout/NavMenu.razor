@@ -74,6 +74,8 @@
 @code {
     private string? currentUrl;
 
+    //backup
+
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
