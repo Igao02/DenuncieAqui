@@ -39,7 +39,7 @@
             <label class="form-label">Tipo de Publicação</label>
             <InputSelect @bind-Value="Model.TypeReport" class="form-select">
                 <option value="" disabled>Selecione o tipo de publicação</option>
-                <AuthorizeView Context="authContext" Roles="ADMIN">
+                <AuthorizeView Context="authContext" Roles="PARTNER">
                     <option value="Evento">Evento</option>
                 </AuthorizeView>
                 <option value="Racismo">Discriminação racial</option>
@@ -59,7 +59,6 @@
             <InputFile multiple OnChange="HandleSelectedFiles" />
         </div>
 
-        @* Mostrar pré-visualizações de imagens *@
         <div class="image-preview-container">
             @foreach (var imageUrl in imagePreviewUrls)
             {

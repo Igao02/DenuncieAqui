@@ -12,6 +12,8 @@ public class InstitutionRepository : IInstitutionRepository
     {
         _context = context;
     }
+    public async Task<IEnumerable<Institution>> GetListAsync() => await _context.Institutions.ToListAsync();
+
     public async Task<Institution?> GetAsync(Guid id) => await _context.Institutions.FindAsync(id);
 
     public async Task<Institution> AddAsync(Institution institution)
