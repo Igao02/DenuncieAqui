@@ -1,5 +1,6 @@
 using DenuncieAqui.Application.UseCases.CommentUseCase;
 using DenuncieAqui.Application.UseCases.ImageUseCase;
+using DenuncieAqui.Application.UseCases.InstitutionUseCase;
 using DenuncieAqui.Application.UseCases.LikeUseCase;
 using DenuncieAqui.Application.UseCases.ReportUseCase;
 using DenuncieAqui.Blazor.Components;
@@ -49,10 +50,12 @@ builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IImageRepository, ImageRepository>();
 builder.Services.AddTransient<ICommentRepository, CommentRepository>();
 builder.Services.AddTransient<ILikeRepository, LikeRepository>();
+builder.Services.AddTransient<IInstitutionRepository, InstitutionRepository>();
 builder.Services.AddScoped<ReportUsecase>();
 builder.Services.AddScoped<ImageUseCase>();
 builder.Services.AddScoped<CommentUseCase>();
 builder.Services.AddScoped<LikeUseCase>();
+builder.Services.AddScoped<InstitutionUseCase>();
 
 var app = builder.Build();
 

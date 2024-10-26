@@ -13,6 +13,8 @@ namespace DenuncieAqui.Infrastructure.Data
 
         public List<Like> Likes { get; set; } = new List<Like>();
 
+        public List<Institution> Institutions { get; set; } = new List<Institution>();
+
     }
 
 }

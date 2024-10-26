@@ -14,6 +14,8 @@ namespace DenuncieAqui.Infrastructure.Data
 
         public DbSet<Image> Images { get; set; }
 
+        public DbSet<Institution> Institutions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

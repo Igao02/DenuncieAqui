@@ -1,0 +1,104 @@
+﻿/* Estilização para a página de confirmação de e-mail */
+.center-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupa a altura total da tela */
+}
+
+.full-page-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/Images/Fundo_OFC.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.email-confirmation-card {
+    background-color: white; /* Cor de fundo do card */
+    border-radius: 10px; /* Cantos arredondados */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    max-width: 450px; /* Largura máxima do card */
+    width: 90%; /* Largura responsiva */
+    padding: 20px; /* Espaçamento interno */
+    text-align: center; /* Centraliza o texto */
+    margin-bottom: 20px; /* Adicionado para evitar que o card fique muito afastado do statusMessage */
+}
+
+.email-confirmation-card img {
+    content: url('/Images/icone_de_correio_eletronico_email.jpg');
+    max-width: 400px;
+}
+
+.card-img-top {
+    width: 100%; /* Imagem ocupa toda a largura do card */
+    border-radius: 10px 10px 0 0; /* Arredonda apenas o topo da imagem */
+    margin-bottom: 15px; /* Espaçamento abaixo da imagem */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Tamanho da fonte do título */
+    color: #333; /* Cor do texto do título */
+}
+
+.card-text {
+    font-size: 1rem; /* Tamanho da fonte do texto */
+    color: #666; /* Cor do texto secundário */
+}
+
+.status-message {
+    margin-top: 1px; /* Reduzido para aproximar da mensagem de status */
+    font-weight: bold; /* Negrito para destacar a mensagem */
+}
+
+/* Media Queries para tamanhos de tela */
+@media (max-width: 1024px) {
+    .email-confirmation-card {
+        max-width: 400px; /* Largura máxima do card reduzida */
+        padding: 15px; /* Espaçamento interno ajustado */
+    }
+
+    .card-title {
+        font-size: 1.4rem; /* Tamanho da fonte do título reduzido */
+    }
+
+    .card-text {
+        font-size: 0.9rem; /* Tamanho da fonte do texto reduzido */
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .email-confirmation-card {
+        max-width: 500px; /* Largura máxima do card aumentada */
+        padding: 25px; /* Espaçamento interno ajustado */
+    }
+
+    .card-title {
+        font-size: 1.6rem; /* Tamanho da fonte do título aumentado */
+    }
+
+    .card-text {
+        font-size: 1.1rem; /* Tamanho da fonte do texto aumentado */
+    }
+}
+
+@media (min-width: 1441px) {
+    .email-confirmation-card {
+        max-width: 600px; /* Largura máxima do card aumentada */
+        padding: 30px; /* Espaçamento interno ajustado */
+        margin-bottom: 200px;
+    }
+
+    .card-title {
+        font-size: 1.8rem; /* Tamanho da fonte do título aumentado */
+    }
+
+    .card-text {
+        font-size: 1.2rem; /* Tamanho da fonte do texto aumentado */
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page "/register-partner"
+
+@using DenuncieAqui.Application.UseCases.InstitutionUseCase
+
+@rendermode InteractiveServer
+
+@inject InstitutionUseCase _institutionUseCase
+@inject NavigationManager Navi
+
+<h3>Cadastro de Instituição</h3>
+
+<EditForm Model="@Model" OnValidSubmit="@CreateInstitution" FormName="Teste">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="CorporateName">Nome da Instituição</label>
+        <InputText id="CorporateName" class="form-control" @bind-Value="Model.CorporateName" />
+    </div>
+
+    <div class="form-group">
+        <label for="Document">CNPJ</label>
+        <InputText id="Document" class="form-control" @bind-Value="Model.Document" />
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Endereço</label>
+        <InputText id="Address" class="form-control" @bind-Value="Model.Address" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+</EditForm>
+
+@code {
+    private Institution Model { get; set; } = new Institution();
+
+    private async Task CreateInstitution()
+    {
+        await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Address);
+
+        Model = new Institution();
+        StateHasChanged();
+
+        Console.WriteLine("Instituição cadastrada com sucesso!");
+
+        Navi.NavigateTo("/");
+    }
+}

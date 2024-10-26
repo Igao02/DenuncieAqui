@@ -31,13 +31,17 @@
         <ValidationSummary></ValidationSummary>
         <div class="mb-3">
             <label class="form-label">Nome da Publicação</label>
-            <InputText @bind-Value="Model.ReportName" class="form-control" placeholder="Digite o nome da Publicação"></InputText>
+            <InputText @bind-Value="Model.ReportName" class="form-control" placeholder="Digite o nome da Publicação">
+            </InputText>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Tipo de Publicação</label>
             <InputSelect @bind-Value="Model.TypeReport" class="form-select">
                 <option value="" disabled>Selecione o tipo de publicação</option>
+                <AuthorizeView Context="authContext" Roles="PARTNER">
+                    <option value="Evento">Evento</option>
+                </AuthorizeView>
                 <option value="Racismo">Discriminação racial</option>
                 <option value="Discriminação feminina">Discriminação feminina</option>
                 <option value="Discriminação de sexualidade">Discriminação de sexualidade</option>
@@ -46,7 +50,8 @@
 
         <div id="post-textarea">
             <label class="form-label">Descrição da publicação</label>
-            <InputTextArea @bind-Value="Model.ReportDescription" class="form-control" placeholder="Digite a descrição da publicação"></InputTextArea>
+            <InputTextArea @bind-Value="Model.ReportDescription" class="form-control"
+                placeholder="Digite a descrição da publicação"></InputTextArea>
         </div>
 
         <div id="upload-image" class="mb-3">
@@ -54,7 +59,6 @@
             <InputFile multiple OnChange="HandleSelectedFiles" />
         </div>
 
-        @* Mostrar pré-visualizações de imagens *@
         <div class="image-preview-container">
             @foreach (var imageUrl in imagePreviewUrls)
             {
@@ -94,7 +98,7 @@
     public Report Model { get; set; } = new Report();
     public Image ModelImage { get; set; } = new Image();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
-    private List<string> imagePreviewUrls = new List<string>(); 
+    private List<string> imagePreviewUrls = new List<string>();
     private bool uploadInProgress = false;
     private string successMessage;
     private string errorMessage;
@@ -119,7 +123,7 @@
                 await _reportUseCase.CreateReportAsync(Model);
                 await UploadImages();
                 successMessage = "Publicação criada com sucesso!";
-                imagePreviewUrls.Clear(); 
+                imagePreviewUrls.Clear();
             }
             else
             {
@@ -143,18 +147,18 @@
     private async Task HandleSelectedFiles(InputFileChangeEventArgs e)
     {
         selectedFiles = e.GetMultipleFiles().ToList();
-        imagePreviewUrls.Clear(); 
+        imagePreviewUrls.Clear();
 
         foreach (var file in selectedFiles)
         {
             var buffer = new byte[file.Size];
             await file.OpenReadStream().ReadAsync(buffer);
 
-            var imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}"; 
+            var imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
             imagePreviewUrls.Add(imageUrl);
         }
 
-        StateHasChanged(); 
+        StateHasChanged();
     }
 
 
@@ -169,7 +173,8 @@
             await stream.CopyToAsync(memoryStream);
             ModelImage.ConteudoArquivo = memoryStream.ToArray();
 
-            var formFile = new FormFile(new MemoryStream(ModelImage.ConteudoArquivo), 0, ModelImage.ConteudoArquivo.Length, file.Name, file.Name)
+            var formFile = new FormFile(new MemoryStream(ModelImage.ConteudoArquivo), 0, ModelImage.ConteudoArquivo.Length,
+            file.Name, file.Name)
                 {
                     Headers = new HeaderDictionary(),
                     ContentType = file.ContentType
@@ -187,7 +192,7 @@
     private void Cancel()
     {
         Navi.NavigateTo("/");
-        imagePreviewUrls.Clear(); 
+        imagePreviewUrls.Clear();
         selectedFiles.Clear();
     }
 }

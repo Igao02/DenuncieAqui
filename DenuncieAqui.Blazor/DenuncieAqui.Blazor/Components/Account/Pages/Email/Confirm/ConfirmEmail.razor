@@ -9,9 +9,27 @@
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Confirm email</PageTitle>
-
-<h1>Confirmação de E-mail</h1>
 <StatusMessage Message="@statusMessage" />
+
+<div class="full-page-background"></div>
+<div class="center-card">
+    <div class="email-confirmation-card">
+        <img class="card-img-top" alt="Email confirmation" />
+        <div class="card-body">
+            <h5 class="card-title">Confirmação de E-mail</h5>
+            <p class="card-text">
+                @if (!string.IsNullOrEmpty(statusMessage))
+                {
+                    @statusMessage
+                }
+                else
+                {
+                    <span>Por favor, aguarde enquanto processamos sua confirmação.</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
 
 @code {
     private string? statusMessage;
@@ -37,13 +55,13 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = $"Error loading user with ID {UserId}";
+            statusMessage = $"Erro ao carregar o usuário com a Id: {UserId}";
         }
         else
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
-            statusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            statusMessage = result.Succeeded ? "Obrigado por ter confirmado o e-mail." : "Erro na confirmação de e-mail.";
         }
     }
 }
