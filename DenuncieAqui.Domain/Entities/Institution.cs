@@ -13,9 +13,8 @@ public class Institution : Entity
     [StringLength(LenghtConst.MaxName, ErrorMessage = "O máximo de caracteres é 150")]
     public string CorporateName { get; set; } = "";
 
-    [Required(ErrorMessage = "O CNPJ é obrigatório")]
+    [Required(ErrorMessage = "O documento é obrigatório")]
     [StringLength(LenghtConst.MaxDocNumber, ErrorMessage = "O máximo de caracteres é 14")]
-    [MinLength(LenghtConst.MinDocNumber, ErrorMessage = "O minimo de caracteres é 14")]
     public string Document { get; set; } = "";
 
     [Required(ErrorMessage = "O endereço é obrigatório")]

@@ -1,6 +1,8 @@
 ﻿@implements IDisposable
 
-@inject NavigationManager NavigationManager
+@using DenuncieAqui.Application.UseCases.InstitutionUseCase
+@using DenuncieAqui.Infrastructure.Data
+@using Microsoft.AspNetCore.Identity
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -18,18 +20,6 @@
             </NavLink>
         </div>
 
-      @*   <div class="nav-item px-3">
-            <NavLink class="nav-link" href="info">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Quem Somos?
-            </NavLink>
-        </div> *@
-
-        @*  <div class="nav-item px-3">
-        <NavLink class="nav-link" href="auth">
-        <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-        </NavLink>
-        </div> *@
-
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
@@ -43,11 +33,14 @@
                     </NavLink>
                 </div>
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="register-partner">
-                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Seja Parceiro
-                    </NavLink>
-                </div>
+                @if (!_isPartner)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="register-partner">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Seja Parceiro
+                        </NavLink>
+                    </div>
+                }
 
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
@@ -72,17 +65,22 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-
-
     </nav>
 </div>
 
 @code {
+    private bool _isPartner = false;
     private string? currentUrl;
 
-    protected override void OnInitialized()
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] InstitutionUseCase _institutionUseCase { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+
+        _isPartner = await _institutionUseCase.CheckIfUserIsPartnerAsync();
+
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
@@ -97,4 +95,3 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
-

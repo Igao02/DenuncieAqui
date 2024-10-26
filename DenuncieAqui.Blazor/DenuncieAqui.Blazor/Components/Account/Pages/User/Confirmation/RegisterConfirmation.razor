@@ -12,8 +12,6 @@
 
 <PageTitle>Register confirmation</PageTitle>
 
-@* <h1>Confirmação de Registro da Conta</h1> *@
-
 <StatusMessage Message="@statusMessage" />
 
 @if (emailConfirmationLink is not null)
@@ -61,7 +59,7 @@ else
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Error finding user for unspecified email";
+            statusMessage = "Erro ao encontrar o usuário no email informado";
         }
     }
 }
