@@ -18,15 +18,25 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
             .Property(i => i.CorporateName)
             .HasMaxLength(150)
             .IsRequired();
-        
+
         builder
             .Property(i => i.Document)
             .HasMaxLength(14)
             .IsRequired();
 
         builder
-            .Property(i => i.Address)
+             .Property(i => i.Cep)
+             .HasMaxLength(10)
+             .IsRequired();
+
+        builder
+            .Property(i => i.Street)
             .HasMaxLength(150)
+            .IsRequired();
+
+        builder
+            .Property(i => i.NumHome)
+            .HasMaxLength(5)
             .IsRequired();
 
         builder
