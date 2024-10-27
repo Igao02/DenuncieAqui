@@ -27,7 +27,6 @@ public class Institution : Entity
     public string Street { get; set; } = "";
 
     [Required(ErrorMessage ="O número do endereço é obrigatório")]
-    [StringLength(LenghtConst.NumHome, ErrorMessage ="O máximo de caracteres é 5")]
     public int NumHome { get; set; } = 0;
 
     public DateTime? CreationDate { get; set; } = DateTime.Now;

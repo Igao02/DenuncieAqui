@@ -12,7 +12,7 @@ public class InstitutionUseCase
     private readonly ApplicationDbContext _context;
     private readonly AuthenticationStateProvider _authenticationStateProvider;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IServiceScopeFactory _serviceScopeFactory; 
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public InstitutionUseCase(IInstitutionRepository institutionRepository, ApplicationDbContext context, AuthenticationStateProvider authenticationStateProvider, UserManager<ApplicationUser> userManager, IServiceScopeFactory serviceScopeFactory)
     {
@@ -20,7 +20,7 @@ public class InstitutionUseCase
         _authenticationStateProvider = authenticationStateProvider;
         _context = context;
         _userManager = userManager;
-        _serviceScopeFactory = serviceScopeFactory; 
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     public async Task<IEnumerable<Institution>> GetInstitutionsAsync()
@@ -33,14 +33,16 @@ public class InstitutionUseCase
         return await _institutionRepository.GetAsync(id);
     }
 
-    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string address)
+    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string street, int numHome)
     {
         var userName = await GetAuthenticatedUserNameAsync();
         var institutions = new Institution
         {
             CorporateName = corporateName,
             Document = document,
-            Address = address,
+            Cep = cep,
+            Street = street,
+            NumHome = numHome,
             CreationDate = DateTime.Now,
             UserName = userName
         };
@@ -102,7 +104,7 @@ public class InstitutionUseCase
 
         if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            using var scope = _serviceScopeFactory.CreateScope(); 
+            using var scope = _serviceScopeFactory.CreateScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             var appUser = await userManager.GetUserAsync(user);

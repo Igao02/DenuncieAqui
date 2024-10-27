@@ -32,8 +32,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="Address">Endereço</label>
-                        <InputText id="Address" class="form-control" @bind-Value="Model.Address" />
+                        <label for="Address">Cep</label>
+                        <InputText id="Cep" class="form-control" @bind-Value="Model.Cep" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Address">Rua</label>
+                        <InputText id="Street" class="form-control" @bind-Value="Model.Street" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Address">Número</label>
+                        <InputNumber id="NumberHome" class="form-control" @bind-Value="Model.NumHome" />
                     </div>
 
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
@@ -49,7 +59,7 @@
 
     private async Task CreateInstitution()
     {
-        await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Address);
+        await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Cep, Model.Street, Model.NumHome);
 
         Model = new Institution();
         StateHasChanged();
