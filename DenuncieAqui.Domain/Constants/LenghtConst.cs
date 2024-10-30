@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DenuncieAqui.Domain.Constants;
+﻿namespace DenuncieAqui.Domain.Constants;
 
 public static class LenghtConst
 {
@@ -8,4 +6,6 @@ public static class LenghtConst
     public const int MaxDocNumber = 14;
     public const int MinDocNumber = 14;
     public const int MaxAddName = 150;
+    public const int MaxCep = 10;
+    public const int NumHome= 15;
 }

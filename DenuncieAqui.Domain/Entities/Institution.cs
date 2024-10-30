@@ -8,6 +8,7 @@ public class Institution : Entity
     {
         //ORM purpose
     }
+    //public string Address { get; set; } = "";
 
     [Required(ErrorMessage = "O nome da corporação é obrigatório")]
     [StringLength(LenghtConst.MaxName, ErrorMessage = "O máximo de caracteres é 150")]
@@ -17,22 +18,33 @@ public class Institution : Entity
     [StringLength(LenghtConst.MaxDocNumber, ErrorMessage = "O máximo de caracteres é 14")]
     public string Document { get; set; } = "";
 
-    [Required(ErrorMessage = "O endereço é obrigatório")]
+    [Required(ErrorMessage = "O CEP e obrigatório")]
+    [StringLength(LenghtConst.MaxCep, ErrorMessage = "O máximo de caracteres é 10")]
+    public string Cep { get; set; } = "";
+
+    [Required(ErrorMessage = "A rua é obrigatória")]
     [StringLength(LenghtConst.MaxAddName, ErrorMessage = "O máximo de caracteres é 150")]
-    public string Address { get; set; } = "";
+    public string Street { get; set; } = "";
+
+    [Required(ErrorMessage ="O número do endereço é obrigatório")]
+    public int NumHome { get; set; } = 0;
+
+    [StringLength(LenghtConst.MaxName, ErrorMessage ="O máximo de caracteres é 150")]
+    public string? Complement { get; set; } = "";
 
     public DateTime? CreationDate { get; set; } = DateTime.Now;
 
     public string UserName { get; set; }    
 
-    public Institution(string corporateName, string document, string address, DateTime? creationDate, string userName) : base()
+    public Institution(string corporateName, string document, string cep, string street, int numHome, string? complement, DateTime? creationDate, string userName) : base()
     {
         CorporateName = corporateName;
         Document = document;
-        Address = address;
+        Cep = cep;
+        Street = street;
+        NumHome = numHome;
         CreationDate = creationDate;
         UserName = userName;
+        Complement = complement;
     }
-
-    
 }
