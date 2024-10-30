@@ -42,6 +42,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="Complement">Complemento</label>
+                        <InputText id="Complement" class="form-control" @bind-Value="Model.Complement" />
+                    </div>
+
+                    <div class="form-group">
                         <label for="Address">Número</label>
                         <InputNumber id="NumberHome" class="form-control" @bind-Value="Model.NumHome" />
                     </div>
@@ -59,7 +64,7 @@
 
     private async Task CreateInstitution()
     {
-        await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Cep, Model.Street, Model.NumHome);
+        await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Cep, Model.Street, Model.NumHome, Model.Complement);
 
         Model = new Institution();
         StateHasChanged();

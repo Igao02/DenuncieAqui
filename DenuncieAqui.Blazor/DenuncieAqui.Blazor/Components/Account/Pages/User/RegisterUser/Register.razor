@@ -30,7 +30,6 @@
                     <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
                         <DataAnnotationsValidator />
                         <h2 class="fw-bold">Crie sua nova conta</h2>
-                        <ValidationSummary class="text-danger" role="alert" />
 
                         <div class="row d-flex justify-content-center">
                             <div class="form-floating col-md-6 mb-3">
@@ -158,17 +157,17 @@
 
     private sealed class InputModel
     {
-        [Required]
+        [Required(ErrorMessage ="Campo necessário")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
 
-        [Required]
+        [Required(ErrorMessage ="Campo necessário")]
         [DataType(DataType.Text)]
         [Display(Name = "Apelido")]
         public string UserName { get; set; } = "";
 
-        [Required]
+        [Required(ErrorMessage = "Campo necessário")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -176,7 +175,7 @@
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "A senha e a confirmação da senha estão diferentesB.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

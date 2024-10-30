@@ -33,7 +33,7 @@ public class InstitutionUseCase
         return await _institutionRepository.GetAsync(id);
     }
 
-    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string street, int numHome)
+    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string street, int numHome, string complement)
     {
         var userName = await GetAuthenticatedUserNameAsync();
         var institutions = new Institution
@@ -44,7 +44,8 @@ public class InstitutionUseCase
             Street = street,
             NumHome = numHome,
             CreationDate = DateTime.Now,
-            UserName = userName
+            UserName = userName,
+            Complement = complement
         };
 
         var createInstitution = await _institutionRepository.AddAsync(institutions);

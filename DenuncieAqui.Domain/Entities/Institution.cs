@@ -29,11 +29,14 @@ public class Institution : Entity
     [Required(ErrorMessage ="O número do endereço é obrigatório")]
     public int NumHome { get; set; } = 0;
 
+    [StringLength(LenghtConst.MaxName, ErrorMessage ="O máximo de caracteres é 150")]
+    public string? Complement { get; set; } = "";
+
     public DateTime? CreationDate { get; set; } = DateTime.Now;
 
     public string UserName { get; set; }    
 
-    public Institution(string corporateName, string document, string cep, string street, int numHome, DateTime? creationDate, string userName) : base()
+    public Institution(string corporateName, string document, string cep, string street, int numHome, string? complement, DateTime? creationDate, string userName) : base()
     {
         CorporateName = corporateName;
         Document = document;
@@ -42,5 +45,6 @@ public class Institution : Entity
         NumHome = numHome;
         CreationDate = creationDate;
         UserName = userName;
+        Complement = complement;
     }
 }
