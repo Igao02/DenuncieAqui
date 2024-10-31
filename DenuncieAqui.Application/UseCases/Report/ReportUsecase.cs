@@ -34,7 +34,8 @@ public class ReportUsecase
             Images = x.Images,
             Likes = x.Likes,
             TypeReport = x.TypeReport,
-            IsEditing = false
+            IsEditing = false,
+            IsEvent = false,
         }).ToList();
 
         return result;

@@ -40,7 +40,7 @@
             <InputSelect @bind-Value="Model.TypeReport" class="form-select">
                 <option value="" disabled>Selecione o tipo de publicação</option>
                 <AuthorizeView Context="authContext" Roles="PARTNER">
-                    <option value="Evento">Evento</option>
+                    <option value="@Model.IsEvent">Evento</option>
                 </AuthorizeView>
                 <option value="Racismo">Discriminação racial</option>
                 <option value="Discriminação feminina">Discriminação feminina</option>

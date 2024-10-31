@@ -13,6 +13,8 @@ public class ReportViewModel
 
     public string UserName { get; set; }
 
+    public bool IsEvent { get; set; }
+
     public DateTime ReportsDate { get; set; } = DateTime.Now;
     public virtual List<Comment> Comments { get; set; } = new List<Comment>();
 

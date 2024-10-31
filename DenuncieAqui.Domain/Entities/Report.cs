@@ -26,6 +26,8 @@ public class Report : Entity
 
     public string UserName { get; set; }
 
+    public bool? IsEvent { get; set; }
+
     public DateTime ReportsDate { get; set; } = DateTime.Now;
 
     public virtual List<Comment> Comments { get; set; } = new List<Comment>();
@@ -34,12 +36,13 @@ public class Report : Entity
 
     public virtual List<Image> Images { get; set; } = new List<Image>();
 
-    public Report(string reportName, string typeReport, string reportDescription, DateTime reportDate, string userName) : base()
+    public Report(string reportName, string typeReport, string reportDescription, DateTime reportDate, string userName, bool? isEvent) : base()
     {
         ReportName = reportName;
         TypeReport = typeReport;
         ReportDescription = reportDescription;
         ReportsDate = reportDate;
         UserName = userName;
+        IsEvent = isEvent;
     }
 }
