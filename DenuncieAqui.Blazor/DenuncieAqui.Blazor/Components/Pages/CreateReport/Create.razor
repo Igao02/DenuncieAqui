@@ -37,10 +37,10 @@
 
         <div class="mb-3">
             <label class="form-label">Tipo de Publicação</label>
-            <InputSelect @bind-Value="Model.TypeReport" class="form-select">
+            <InputSelect @bind-Value="Model.TypeReport" class="form-select" @onchange="OnTypeReportChanged">
                 <option value="" disabled>Selecione o tipo de publicação</option>
                 <AuthorizeView Context="authContext" Roles="PARTNER">
-                    <option value="@Model.IsEvent">Evento</option>
+                    <option value="Evento">Evento</option>
                 </AuthorizeView>
                 <option value="Racismo">Discriminação racial</option>
                 <option value="Discriminação feminina">Discriminação feminina</option>
@@ -51,7 +51,7 @@
         <div id="post-textarea">
             <label class="form-label">Descrição da publicação</label>
             <InputTextArea @bind-Value="Model.ReportDescription" class="form-control"
-                placeholder="Digite a descrição da publicação"></InputTextArea>
+                           placeholder="Digite a descrição da publicação"></InputTextArea>
         </div>
 
         <div id="upload-image" class="mb-3">
@@ -100,8 +100,8 @@
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private List<string> imagePreviewUrls = new List<string>();
     private bool uploadInProgress = false;
-    private string successMessage;
-    private string errorMessage;
+    private string successMessage = "";
+    private string errorMessage = "";
 
     [HttpPost]
     private async Task CreateReport()
@@ -112,27 +112,16 @@
 
         try
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user.Identity != null && user.Identity.IsAuthenticated)
-            {
-                var userName = user.Identity.Name;
-                Model.UserName = userName;
-
-                await _reportUseCase.CreateReportAsync(Model);
-                await UploadImages();
-                successMessage = "Publicação criada com sucesso!";
-                imagePreviewUrls.Clear();
-            }
-            else
-            {
-                errorMessage = "Usuário não autenticado.";
-            }
+            await _reportUseCase.CreateReportAsync(Model);
+            await UploadImages();
+            successMessage = "Publicação criada com sucesso!";
+            imagePreviewUrls.Clear();
+            Console.WriteLine("Username: ", Model.UserName);
         }
         catch (Exception ex)
         {
-            errorMessage = $"Erro ao criar publicação: {ex.Message}";
+            errorMessage = $"Erro ao criar publicação: {ex.InnerException?.Message ?? ex.Message}";
+            Navi.NavigateTo("/create");
         }
         finally
         {
@@ -187,6 +176,12 @@
         {
             await _imageUseCase.UploadImagesAsync(formFiles, Model.Id);
         }
+    }
+
+    private void OnTypeReportChanged(ChangeEventArgs e)
+    {
+        Model.TypeReport = e.Value?.ToString();
+        Model.IsEvent = Model.TypeReport == "Evento";
     }
 
     private void Cancel()

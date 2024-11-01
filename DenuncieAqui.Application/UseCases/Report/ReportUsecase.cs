@@ -35,7 +35,7 @@ public class ReportUsecase
             Likes = x.Likes,
             TypeReport = x.TypeReport,
             IsEditing = false,
-            IsEvent = false,
+            IsEvent = true,
         }).ToList();
 
         return result;
@@ -50,9 +50,35 @@ public class ReportUsecase
 
     public async Task<Report> CreateReportAsync(Report report)
     {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("Usuário não autenticado");
+        }
+
+        var userName = user.Identity.Name;
+        report.UserName = userName;
+
+        if(report.UserName == null)
+        {
+            throw new UnauthorizedAccessException("Nome de usuário nulo");
+        }
+
+        if (user.IsInRole("PARTNER"))
+        {
+            report.IsEvent = report.TypeReport == "Evento";
+        }
+        else
+        {
+            report.IsEvent = false;  
+        }
+
         var createdReport = await _reportRepository.AddAsync(report);
         return createdReport;
     }
+
 
     public async Task DeleteReportAsync(Guid reportId)
     {

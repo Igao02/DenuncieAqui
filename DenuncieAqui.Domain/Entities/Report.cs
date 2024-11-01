@@ -26,7 +26,7 @@ public class Report : Entity
 
     public string UserName { get; set; }
 
-    public bool? IsEvent { get; set; }
+    public bool? IsEvent { get; set; } = true;
 
     public DateTime ReportsDate { get; set; } = DateTime.Now;
 
