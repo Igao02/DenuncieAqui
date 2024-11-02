@@ -16,6 +16,16 @@ public class InstitutionRepository : IInstitutionRepository
 
     public async Task<Institution?> GetAsync(Guid id) => await _context.Institutions.FindAsync(id);
 
+    public async Task<Institution?> GetByNameAsync(string name)
+    {
+        return await _context.Institutions.FirstOrDefaultAsync(i => i.CorporateName == name);
+    }
+
+    public async Task<Institution?> GetByDocAsync(string doc)
+    {
+        return await _context.Institutions.FirstOrDefaultAsync(i => i.Document == doc);
+    }
+
     public async Task<Institution> AddAsync(Institution institution)
     {
         await _context.AddAsync(institution);
@@ -43,4 +53,5 @@ public class InstitutionRepository : IInstitutionRepository
         return institution;
     }
 
+   
 }

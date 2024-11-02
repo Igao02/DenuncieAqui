@@ -33,9 +33,24 @@ public class InstitutionUseCase
         return await _institutionRepository.GetAsync(id);
     }
 
-    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string street, int numHome, string complement)
+    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string street, int numHome, string complement, string neighborhood, string uf)
     {
+        var existingInstName = await _institutionRepository.GetByNameAsync(institution.CorporateName);
+
+        if (existingInstName != null)
+        {
+            throw new InvalidOperationException("Uma instituição com esse nome já existe");
+        }
+
+        var existingInstDoc = await _institutionRepository.GetByDocAsync(institution.Document);
+
+        if (existingInstDoc != null)
+        {
+            throw new InvalidOperationException("Uma instituição com esse documento já existe");
+        }
+
         var userName = await GetAuthenticatedUserNameAsync();
+
         var institutions = new Institution
         {
             CorporateName = corporateName,
@@ -45,7 +60,9 @@ public class InstitutionUseCase
             NumHome = numHome,
             CreationDate = DateTime.Now,
             UserName = userName,
-            Complement = complement
+            Complement = complement,
+            Neighborhood = neighborhood,
+            Uf = uf 
         };
 
         var createInstitution = await _institutionRepository.AddAsync(institutions);

@@ -35,6 +35,16 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
             .IsRequired();
 
         builder
+            .Property(i => i.Neighborhood)
+            .HasMaxLength(150)
+            .IsRequired();
+
+        builder
+            .Property(i => i.Uf)
+            .HasMaxLength(2)
+            .IsRequired();
+
+        builder
             .Property(i => i.NumHome)
             .HasMaxLength(5)
             .IsRequired();

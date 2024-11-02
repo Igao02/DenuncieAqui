@@ -10,7 +10,7 @@
 <h3 class="text-center">Cadastro de Parceiro</h3>
 
 <div class="full-page-background"></div>
-<div class="card mb-3" >
+<div class="card mb-3">
     <div class="row g-0">
         <div class="col-md-4">
             <img src="/Images/parceiro.png" class="img-fluid rounded-start" alt="Profile Picture">
@@ -20,6 +20,11 @@
                 <EditForm Model="@Model" OnValidSubmit="@CreateInstitution" FormName="Teste">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@ErrorMessage</div>
+                    }
 
                     <div class="form-group">
                         <label for="CorporateName">Nome da Instituição</label>
@@ -32,13 +37,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="Address">Cep</label>
+                        <label for="Cep">Cep</label>
                         <InputText id="Cep" class="form-control" @bind-Value="Model.Cep" />
                     </div>
 
                     <div class="form-group">
                         <label for="Address">Rua</label>
                         <InputText id="Street" class="form-control" @bind-Value="Model.Street" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Neighborhood">Bairro</label>
+                        <InputText id="Neighborhood" class="form-control" @bind-Value="Model.Neighborhood" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Uf">Bairro</label>
+                        <InputText id="Uf" class="form-control" @bind-Value="Model.Uf" />
                     </div>
 
                     <div class="form-group">
@@ -58,19 +73,29 @@
     </div>
 </div>
 
-
 @code {
     private Institution Model { get; set; } = new Institution();
+    private string ErrorMessage { get; set; } = string.Empty;
 
     private async Task CreateInstitution()
     {
-        await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Cep, Model.Street, Model.NumHome, Model.Complement);
+        try
+        {
+            await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Cep, Model.Street, Model.NumHome, Model.Complement!, Model.Neighborhood, Model.Uf);
 
-        Model = new Institution();
-        StateHasChanged();
+            Model = new Institution();
+            ErrorMessage = string.Empty;
+            StateHasChanged();
 
-        Console.WriteLine("Instituição cadastrada com sucesso!");
-
-        Navi.NavigateTo("/");
+            Navi.NavigateTo("/");
+        }
+        catch (InvalidOperationException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "Ocorreu um erro ao tentar cadastrar a instituição. Tente novamente.";
+        }
     }
 }

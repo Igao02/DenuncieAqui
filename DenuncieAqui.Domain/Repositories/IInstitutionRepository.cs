@@ -10,5 +10,9 @@ public interface IInstitutionRepository
 
     Task<Institution> EditAsync(Institution institution);
 
+    Task<Institution?> GetByNameAsync(string name);
+
+    Task<Institution?> GetByDocAsync(string doc);
+
     Task DeleteAsync(Guid id);
 }
