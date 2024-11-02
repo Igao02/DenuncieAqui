@@ -26,6 +26,14 @@ public class Institution : Entity
     [StringLength(LenghtConst.MaxAddName, ErrorMessage = "O máximo de caracteres é 150")]
     public string Street { get; set; } = "";
 
+    [Required(ErrorMessage ="O bairro é obrigatório")]
+    [StringLength(LenghtConst.MaxName, ErrorMessage = "O máximo de caracteres é 150")]
+    public string Neighborhood { get; set; } = "";
+
+    [Required(ErrorMessage ="A sigla do estado é obrigatório")]
+    [StringLength(LenghtConst.NumUf, ErrorMessage = "O máximo de caracteres é 2")]
+    public string Uf { get; set; } = "";
+
     [Required(ErrorMessage ="O número do endereço é obrigatório")]
     public int NumHome { get; set; } = 0;
 
@@ -36,7 +44,7 @@ public class Institution : Entity
 
     public string UserName { get; set; }    
 
-    public Institution(string corporateName, string document, string cep, string street, int numHome, string? complement, DateTime? creationDate, string userName) : base()
+    public Institution(string corporateName, string document, string cep, string street, int numHome, string? complement, DateTime? creationDate, string userName, string neighborhood, string uf) : base()
     {
         CorporateName = corporateName;
         Document = document;
@@ -46,5 +54,7 @@ public class Institution : Entity
         CreationDate = creationDate;
         UserName = userName;
         Complement = complement;
+        Neighborhood = neighborhood;
+        Uf = uf;
     }
 }
