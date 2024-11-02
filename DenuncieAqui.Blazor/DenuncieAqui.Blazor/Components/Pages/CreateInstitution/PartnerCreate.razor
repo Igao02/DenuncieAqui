@@ -6,6 +6,7 @@
 
 @inject InstitutionUseCase _institutionUseCase
 @inject NavigationManager Navi
+@inject HttpClient Http
 
 <h3 class="text-center">Cadastro de Parceiro</h3>
 
@@ -17,7 +18,7 @@
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <EditForm Model="@Model" OnValidSubmit="@CreateInstitution" FormName="Teste">
+                <EditForm Model="@Model" OnValidSubmit="@CreateInstitution">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
@@ -38,11 +39,11 @@
 
                     <div class="form-group">
                         <label for="Cep">Cep</label>
-                        <InputText id="Cep" class="form-control" @bind-Value="Model.Cep" />
+                        <InputText id="Cep" class="form-control" @bind-Value="Model.Cep" @onblur="HandleCepChange" />
                     </div>
 
                     <div class="form-group">
-                        <label for="Address">Rua</label>
+                        <label for="Street">Rua</label>
                         <InputText id="Street" class="form-control" @bind-Value="Model.Street" />
                     </div>
 
@@ -52,7 +53,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="Uf">Uf</label>
+                        <label for="Uf">Estado</label>
                         <InputText id="Uf" class="form-control" @bind-Value="Model.Uf" />
                     </div>
 
@@ -62,8 +63,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="Address">Número</label>
-                        <InputNumber id="NumberHome" class="form-control" @bind-Value="Model.NumHome" />
+                        <label for="NumHome">Número</label>
+                        <InputNumber id="NumHome" class="form-control" @bind-Value="Model.NumHome" />
                     </div>
 
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
@@ -81,12 +82,18 @@
     {
         try
         {
-            await _institutionUseCase.CreateInstitutionAsync(Model, Model.CorporateName, Model.Document, Model.Cep, Model.Street, Model.NumHome, Model.Complement!, Model.Neighborhood, Model.Uf);
-
+            await _institutionUseCase.CreateInstitutionAsync(Model, 
+                Model.CorporateName, 
+                Model.Document, 
+                Model.Cep, 
+                Model.Street, 
+                Model.NumHome, 
+                Model.Complement!, 
+                Model.Neighborhood, 
+                Model.Uf
+            );
             Model = new Institution();
             ErrorMessage = string.Empty;
-            StateHasChanged();
-
             Navi.NavigateTo("/");
         }
         catch (InvalidOperationException ex)
@@ -97,5 +104,45 @@
         {
             ErrorMessage = "Ocorreu um erro ao tentar cadastrar a instituição. Tente novamente.";
         }
+    }
+
+    private async Task HandleCepChange()
+    {
+        var cep = Model.Cep?.Replace("-", "").Replace(".", "").Trim();
+
+        if (!string.IsNullOrEmpty(cep))
+        {
+            try
+            {
+                var addressInfo = await Http.GetFromJsonAsync<AddressResponse>($"https://viacep.com.br/ws/{cep}/json/");
+
+                if (addressInfo != null && string.IsNullOrEmpty(addressInfo.erro))
+                {
+                    Model.Street = addressInfo.logradouro;
+                    Model.Neighborhood = addressInfo.bairro;
+                    Model.Uf = addressInfo.uf;
+                }
+                else
+                {
+                    ErrorMessage = "CEP inválido. Verifique e tente novamente.";
+                }
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Erro ao buscar o CEP. Tente novamente mais tarde.";
+            }
+        }
+        else
+        {
+            ErrorMessage = "Por favor, insira um CEP válido.";
+        }
+    }
+
+    private class AddressResponse
+    {
+        public string logradouro { get; set; } = "";
+        public string bairro { get; set; } = "";
+        public string uf { get; set; } = "";
+        public string erro { get; set; } = "";
     }
 }
