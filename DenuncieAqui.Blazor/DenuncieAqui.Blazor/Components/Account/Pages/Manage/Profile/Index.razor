@@ -1,0 +1,289 @@
+﻿@page "/Account/Manage"
+
+@using DenuncieAqui.Application.UseCases.ReportUseCase
+@using DenuncieAqui.Application.UseCases.ImageUseCase
+@using DenuncieAqui.Application.UseCases.CommentUseCase
+@using DenuncieAqui.Application.UseCases.LikeUseCase
+@using DenuncieAqui.Application.ViewModels.Report
+@using DenuncieAqui.Domain.Entities
+@using DenuncieAqui.Domain.Repositories
+
+@rendermode InteractiveServer
+@inject ReportUsecase _reportUseCase
+@inject ImageUseCase _imageUseCase
+@inject CommentUseCase _commentUseCase
+@inject LikeUseCase _likeUseCase
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Publications</PageTitle>
+@* <div class="full-page-background"></div> *@
+@if (reports != null && reports.Any())
+{
+    @foreach (var report in reports)
+    {
+        <div id="post-container">
+            <div class="post-item">
+                <div id="post-header">
+                    <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
+                    <div id="user-name">@report.UserName</div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-link" @onclick="() => ToggleDropdown(report.Id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
+                            </svg>
+                        </button>
+
+                        @if (dropdownState.ContainsKey(report.Id) && dropdownState[report.Id])
+                        {
+                            <div class="dropdown-menu show">
+                                <button class="dropdown-item" @onclick="() => ConfirmDelete(report.Id)">Deletar publicação</button>
+                                <button class="dropdown-item" @onclick="() => EditReport(report)">Editar publicação</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (report.IsEditing && selectedReport != null)
+                {
+                    <EditForm Model="selectedReport" OnValidSubmit="UpdateReport">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome da Publicação:</label>
+                            <InputText @bind-Value="selectedReport.ReportName" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Publicação</label>
+                            <InputSelect @bind-Value="selectedReport.TypeReport" class="form-select">
+                                <option value="" disabled>Selecione o tipo de publicação</option>
+                                <option value="Racismo">Discriminação racial</option>
+                                <option value="Discriminação feminina">Discriminação feminina</option>
+                                <option value="Discriminação de sexualidade">Discriminação de sexualidade</option>
+                            </InputSelect>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Descrição da Publicação:</label>
+                            <InputTextArea @bind-Value="selectedReport.ReportDescription" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancelar</button>
+                    </EditForm>
+                }
+                else
+                {
+                    <div id="post-name">
+                        <p>@report.ReportName</p>
+                    </div>
+                    <div id="post-description">
+                        <p>@report.ReportDescription</p>
+                    </div>
+
+                    @if (report.Images != null && report.Images.Any())
+                    {
+                        @foreach (var image in report.Images)
+                        {
+                            <img src="@image.ImageUrl" alt="Post Image" class="post-image">
+                        }
+                    }
+                    else
+                    {
+                        <p>No images available for this report.</p>
+                    }
+                }
+
+                <EditForm Model="@Model" OnValidSubmit="() => SubmitComment(report.Id)" FormName=@($"commentForm-{report.Id}")>
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label class="form-label">Comentários: </label>
+                        <InputTextArea @bind-Value="Model.CommentContent" class="form-control" placeholder="Escreva um comentário..."></InputTextArea>
+                        <ValidationMessage For="@(() => Model.CommentContent)" />
+                    </div>
+
+                    <div id="commentActions">
+                        <button id="commentButton" type="submit" class="btn btn-primary">Enviar Comentário</button>
+                    </div>
+                </EditForm>
+
+                <div id="actions">
+                    <button class="btn btn-primary" @onclick="() => SubmitLike(report.Id)">Like</button>
+                </div>
+
+                @if (report.Comments != null && report.Comments.Any())
+                {
+                    <div class="comment-section">
+                        @foreach (var comment in report.Comments)
+                        {
+                            <div class="comment-item">
+                                <p><strong>@comment.UserName:</strong> @comment.CommentContent</p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Não há publicações disponíveis.</p>
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+@code {
+    public IEnumerable<ReportViewModel> reports;
+    public IEnumerable<Image> images;
+    public IEnumerable<Comment> comments;
+    public IEnumerable<Like> likes;
+
+    public Comment Model { get; set; } = new Comment();
+    private string errorMessage = "";
+    private string successMessage = "";
+    private Dictionary<Guid, bool> dropdownState = new Dictionary<Guid, bool>();
+    private bool isEditing = false;
+    private ReportViewModel selectedReport;
+
+    protected override async Task OnInitializedAsync()
+    {
+        reports = await _reportUseCase.GetUserReportsAsync();
+        images = await _imageUseCase.GetImagesAsync();
+        comments = await _commentUseCase.GetCommentsAsync();
+        likes = await _likeUseCase.GetLikesAsync();
+    }
+
+    private void ToggleDropdown(Guid reportId)
+    {
+        if (!dropdownState.ContainsKey(reportId))
+        {
+            dropdownState[reportId] = false;
+        }
+
+        dropdownState[reportId] = !dropdownState[reportId];
+    }
+
+    private async Task ConfirmDelete(Guid reportId)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Tem certeza que deseja deletar esta publicação?");
+
+        if (confirmed)
+        {
+            await DeleteReport(reportId);
+        }
+    }
+
+    private async Task DeleteReport(Guid reportId)
+    {
+        try
+        {
+            await _reportUseCase.DeleteReportAsync(reportId);
+
+            successMessage = "Publicação deletada com sucesso!";
+            reports = await _reportUseCase.GetUserReportsAsync();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao deletar a publicação: {ex.Message}";
+            successMessage = string.Empty;
+        }
+    }
+
+    private async Task SubmitComment(Guid reportId)
+    {
+        try
+        {
+            await _commentUseCase.CreateCommentAsync(reportId, Model.CommentContent);
+
+            successMessage = "Comentário adicionado com sucesso!";
+            errorMessage = string.Empty;
+            Model.CommentContent = string.Empty;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ocorreu um erro: {ex.Message}. Inner Exception: {ex.InnerException?.Message}";
+            successMessage = string.Empty;
+        }
+    }
+
+    private async Task SubmitLike(Guid reportId)
+    {
+        try
+        {
+            await _likeUseCase.AddOrRemoveLikeAsync(reportId);
+
+            successMessage = "Ação de curtida realizada com sucesso!";
+            errorMessage = string.Empty;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao curtir: {ex.Message}";
+            successMessage = string.Empty;
+        }
+    }
+
+    private void EditReport(ReportViewModel report)
+    {
+        selectedReport = report;
+        selectedReport.IsEditing = true;
+    }
+
+    private async Task UpdateReport()
+    {
+        try
+        {
+            await _reportUseCase.UpdateReportAsync(selectedReport);
+
+            successMessage = "Publicação editada com sucesso!";
+            errorMessage = string.Empty;
+            isEditing = false;
+            selectedReport = null;
+            reports = await _reportUseCase.GetUserReportsAsync();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao editar a publicação: {ex.Message}";
+            successMessage = string.Empty;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        isEditing = false;
+        selectedReport = null;
+    }
+}

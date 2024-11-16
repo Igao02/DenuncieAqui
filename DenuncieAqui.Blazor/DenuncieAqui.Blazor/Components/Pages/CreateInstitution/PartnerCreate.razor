@@ -1,6 +1,7 @@
 ﻿@page "/register-partner"
 
 @using DenuncieAqui.Application.UseCases.InstitutionUseCase
+@using DenuncieAqui.Blazor.Components.Pages.CreateInstitution
 
 @rendermode InteractiveServer
 
@@ -9,6 +10,8 @@
 @inject HttpClient Http
 
 <h3 class="text-center">Cadastro de Parceiro</h3>
+
+<DenuncieAqui.Blazor.Components.Pages.CreateInstitution.Modal.PartnerRegistrationModal IsVisible="@ShowModal" OnClose="@CloseModal" />
 
 <div class="full-page-background"></div>
 <div class="card mb-3">
@@ -77,19 +80,20 @@
 @code {
     private Institution Model { get; set; } = new Institution();
     private string ErrorMessage { get; set; } = string.Empty;
+    private bool ShowModal { get; set; } = true;
 
     private async Task CreateInstitution()
     {
         try
         {
-            await _institutionUseCase.CreateInstitutionAsync(Model, 
-                Model.CorporateName, 
-                Model.Document, 
-                Model.Cep, 
-                Model.Street, 
-                Model.NumHome, 
-                Model.Complement!, 
-                Model.Neighborhood, 
+            await _institutionUseCase.CreateInstitutionAsync(Model,
+                Model.CorporateName,
+                Model.Document,
+                Model.Cep,
+                Model.Street,
+                Model.NumHome,
+                Model.Complement!,
+                Model.Neighborhood,
                 Model.Uf
             );
             Model = new Institution();
@@ -129,13 +133,18 @@
             }
             catch (Exception)
             {
-                ErrorMessage = "Erro ao buscar o CEP. Tente novamente mais tarde.";
+                ErrorMessage = "Erro ao buscar o CEP.";
             }
         }
         else
         {
             ErrorMessage = "Por favor, insira um CEP válido.";
         }
+    }
+
+    private void CloseModal()
+    {
+        ShowModal = false;
     }
 
     private class AddressResponse
