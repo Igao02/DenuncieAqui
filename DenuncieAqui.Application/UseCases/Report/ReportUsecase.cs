@@ -35,7 +35,7 @@ public class ReportUsecase
             Likes = x.Likes,
             TypeReport = x.TypeReport,
             IsEditing = false,
-            IsEvent = true,
+            IsEvent = false,
         }).ToList();
 
         return result;
@@ -136,5 +136,44 @@ public class ReportUsecase
         var updateReport = await _reportRepository.EditAsync(existingReport);
         return updateReport;
     }
+
+    public async Task<IEnumerable<ReportViewModel>> GetUserReportsAsync()
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+        }
+
+        var userName = user.Identity.Name;
+
+        if (string.IsNullOrEmpty(userName))
+        {
+            throw new UnauthorizedAccessException("Nome de usuário não encontrado.");
+        }
+
+        var userReports = await _reportRepository.GetListAsync();
+        userReports = userReports.Where(x => x.UserName == userName).ToList();
+
+        var result = userReports.Select(x => new ReportViewModel()
+        {
+            Id = x.Id,
+            ReportDescription = x.ReportDescription,
+            ReportName = x.ReportName,
+            ReportsDate = x.ReportsDate,
+            UserName = x.UserName,
+            Comments = x.Comments,
+            Images = x.Images,
+            Likes = x.Likes,
+            TypeReport = x.TypeReport,
+            IsEditing = false,
+            IsEvent = false,
+        }).ToList();
+
+        return result;
+    }
+
 
 }

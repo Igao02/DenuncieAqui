@@ -1,10 +1,10 @@
-﻿@page "/"
+﻿@page "/Account/Manage"
+
 @using DenuncieAqui.Application.UseCases.ReportUseCase
 @using DenuncieAqui.Application.UseCases.ImageUseCase
 @using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Application.UseCases.LikeUseCase
 @using DenuncieAqui.Application.ViewModels.Report
-@using DenuncieAqui.Blazor.Client.Components.Notifications.Toast
 @using DenuncieAqui.Domain.Entities
 @using DenuncieAqui.Domain.Repositories
 
@@ -15,8 +15,8 @@
 @inject LikeUseCase _likeUseCase
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Home</PageTitle>
-<div class="full-page-background"></div>
+<PageTitle>Publications</PageTitle>
+@* <div class="full-page-background"></div> *@
 @if (reports != null && reports.Any())
 {
     @foreach (var report in reports)
@@ -132,20 +132,21 @@ else
     <p>Não há publicações disponíveis.</p>
 }
 
-<Toast @ref="toast" />
-
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    toast.Show("Sucesso", successMessage, "Agora");
+    <div class="alert alert-success">
+        @successMessage
+    </div>
 }
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    toast.Show("Erro", errorMessage, "Agora");
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
 }
 
 @code {
-    private Toast toast;
     public IEnumerable<ReportViewModel> reports;
     public IEnumerable<Image> images;
     public IEnumerable<Comment> comments;
@@ -160,7 +161,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        reports = await _reportUseCase.GetReportsAsync();
+        reports = await _reportUseCase.GetUserReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
         likes = await _likeUseCase.GetLikesAsync();
@@ -193,7 +194,7 @@ else
             await _reportUseCase.DeleteReportAsync(reportId);
 
             successMessage = "Publicação deletada com sucesso!";
-            reports = await _reportUseCase.GetReportsAsync();
+            reports = await _reportUseCase.GetUserReportsAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -205,8 +206,6 @@ else
             errorMessage = $"Erro ao deletar a publicação: {ex.Message}";
             successMessage = string.Empty;
         }
-
-        ShowToastMessages();
     }
 
     private async Task SubmitComment(Guid reportId)
@@ -229,8 +228,6 @@ else
             errorMessage = $"Ocorreu um erro: {ex.Message}. Inner Exception: {ex.InnerException?.Message}";
             successMessage = string.Empty;
         }
-
-        ShowToastMessages();
     }
 
     private async Task SubmitLike(Guid reportId)
@@ -252,8 +249,6 @@ else
             errorMessage = $"Erro ao curtir: {ex.Message}";
             successMessage = string.Empty;
         }
-
-        ShowToastMessages();
     }
 
     private void EditReport(ReportViewModel report)
@@ -272,7 +267,7 @@ else
             errorMessage = string.Empty;
             isEditing = false;
             selectedReport = null;
-            reports = await _reportUseCase.GetReportsAsync();
+            reports = await _reportUseCase.GetUserReportsAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -284,8 +279,6 @@ else
             errorMessage = $"Erro ao editar a publicação: {ex.Message}";
             successMessage = string.Empty;
         }
-
-        ShowToastMessages();
     }
 
     private void CancelEdit()
@@ -293,21 +286,4 @@ else
         isEditing = false;
         selectedReport = null;
     }
-
-    private void ShowToastMessages()
-    {
-        if (!string.IsNullOrEmpty(successMessage))
-        {
-            toast.Show("Sucesso", successMessage, "Agora");
-            successMessage = "";
-        }
-
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            toast.Show("Erro", errorMessage, "Agora");
-            errorMessage = "";
-        }
-    }
 }
-
-

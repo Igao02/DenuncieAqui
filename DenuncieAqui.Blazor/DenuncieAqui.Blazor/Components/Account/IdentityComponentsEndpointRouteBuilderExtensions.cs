@@ -1,5 +1,5 @@
 using DenuncieAqui.Blazor.Components.Account.Pages.User.External;
-using DenuncieAqui.Blazor.Components.Account.Pages.Manage;
+using DenuncieAqui.Blazor.Components.Account.Pages.Manage.External;
 using DenuncieAqui.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;

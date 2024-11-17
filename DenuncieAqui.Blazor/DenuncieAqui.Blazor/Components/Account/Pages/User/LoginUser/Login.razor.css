@@ -1,6 +1,6 @@
 ﻿.full-page-background {
     position: relative;
-    width: 100vw;
+    width: 80vw;
     height: 100vh;
     background: url('/Images/Slogan 5.jpeg') center center fixed;
     background-size: cover;
@@ -44,7 +44,7 @@
 @media (min-width: 768px) and (max-width: 1024px) {
     .content {
         width: 85vw;
-        height: 60vh;
+        height: 65vh;
     }
 
     .card {
@@ -106,7 +106,7 @@
     }
 
     .card {
-        width: 60vw;
+        width: 59vw;
         height: 75vh;
         border-radius: 10px 0 0 10px;
     }

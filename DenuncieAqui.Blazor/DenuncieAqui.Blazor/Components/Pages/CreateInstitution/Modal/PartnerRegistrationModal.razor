@@ -1,0 +1,35 @@
+@if (IsVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-content">
+            <h3>Informações Importantes</h3>
+            <p>Para se tornar um parceiro você precisa preencher os dados a seguir.</p>
+            <p>
+                O intuito de um parceiro é divulgar eventos realizados pela instituição/pessoa que ajudará a nossa sociedade! O seu perfil ao virar um parceiro
+                terá algumas mudanças, como por exemplo:
+
+                <ol>
+                    <li>Um ícone de verificação será exibido a frente do seu perfil.</li>
+                    <li>Será liberado um novo tipo de publicação para você, chamado "Evento."</li>
+                </ol>
+            </p>
+            <button class="btn btn-primary" @onclick="CloseModal">Fechar</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private async Task CloseModal()
+    {
+        if (OnClose.HasDelegate)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+}

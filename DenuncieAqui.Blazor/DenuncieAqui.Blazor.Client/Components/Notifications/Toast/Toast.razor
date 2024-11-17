@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    @if (Visible)
+    {
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                @* <img src="@HeaderImage" class="rounded me-2" alt="..."> *@
+                <strong class="me-auto">@Title</strong>
+                <small>@Time</small>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="Hide"></button>
+            </div>
+            <div class="toast-body">
+                @Message
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // [Parameter] public string HeaderImage { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Message { get; set; }
+    [Parameter] public string Time { get; set; }
+    public bool Visible { get; set; }
+
+    public void Show(string title, string message, string time = "Agora")
+    {
+        Title = title;
+        Message = message;
+        // HeaderImage = headerImage;
+        Time = time;
+        Visible = true;
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        Visible = false;
+        StateHasChanged();
+    }
+}
