@@ -14,21 +14,20 @@ public class EmailSenderService : IEmailSender<ApplicationUser>
         _configuration = configuration;
     }
 
-    // Método para enviar e-mails
     public async Task SendEmailAsync(string email, string subject, string message)
     {
         var emailSettings = _configuration.GetSection("EmailSettings");
 
-        var smtpClient = new SmtpClient(emailSettings["SMTPServer"]) // Corrigido para usar a chave de servidor SMTP
+        var smtpClient = new SmtpClient(emailSettings["SMTPServer"]) 
         {
-            Port = int.Parse(emailSettings["SMTPPort"]), // Corrigido para pegar a porta correta
+            Port = int.Parse(emailSettings["SMTPPort"]), 
             Credentials = new NetworkCredential(emailSettings["SMTPUsername"], emailSettings["SMTPPassword"]),
             EnableSsl = true,
         };
 
         var mailMessage = new MailMessage
         {
-            From = new MailAddress(emailSettings["FromEmail"]), // Pega o e-mail do remetente da configuração
+            From = new MailAddress(emailSettings["FromEmail"]), 
             Subject = subject,
             Body = message,
             IsBodyHtml = true,
@@ -38,7 +37,7 @@ public class EmailSenderService : IEmailSender<ApplicationUser>
         await smtpClient.SendMailAsync(mailMessage);
     }
 
-    // Método para enviar o link de confirmação de e-mail
+
     public async Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
     {
         string subject = "Confirm your email";
@@ -46,7 +45,6 @@ public class EmailSenderService : IEmailSender<ApplicationUser>
         await SendEmailAsync(email, subject, message);
     }
 
-    // Método para enviar o código de reset de senha (não está sendo usado, mas implementado para completude)
     public async Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
     {
         string subject = "Reset your password code";
@@ -54,11 +52,10 @@ public class EmailSenderService : IEmailSender<ApplicationUser>
         await SendEmailAsync(email, subject, message);
     }
 
-    // Método para enviar o link de reset de senha
     public async Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string callbackUrl)
     {
-        string subject = "Reset your password";
-        string message = $"Please reset your password by clicking this link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>link</a>";
+        string subject = "Resetar sua senha";
+        string message = $"Por favor, altere sua senha clicando no link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>link</a>";
         await SendEmailAsync(email, subject, message);
     }
 }
