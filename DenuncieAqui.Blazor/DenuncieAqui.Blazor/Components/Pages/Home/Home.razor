@@ -4,6 +4,7 @@
 @using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Application.UseCases.LikeUseCase
 @using DenuncieAqui.Application.ViewModels.Report
+@using DenuncieAqui.Blazor.Client.Components.Notifications.Toast
 @using DenuncieAqui.Domain.Entities
 @using DenuncieAqui.Domain.Repositories
 
@@ -131,21 +132,20 @@ else
     <p>Não há publicações disponíveis.</p>
 }
 
+<Toast @ref="toast" />
+
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div class="alert alert-success">
-        @successMessage
-    </div>
+    toast.Show("Sucesso", successMessage, "Agora");
 }
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">
-        @errorMessage
-    </div>
+    toast.Show("Erro", errorMessage, "Agora");
 }
 
 @code {
+    private Toast toast;
     public IEnumerable<ReportViewModel> reports;
     public IEnumerable<Image> images;
     public IEnumerable<Comment> comments;
@@ -205,6 +205,8 @@ else
             errorMessage = $"Erro ao deletar a publicação: {ex.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private async Task SubmitComment(Guid reportId)
@@ -227,6 +229,8 @@ else
             errorMessage = $"Ocorreu um erro: {ex.Message}. Inner Exception: {ex.InnerException?.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private async Task SubmitLike(Guid reportId)
@@ -248,6 +252,8 @@ else
             errorMessage = $"Erro ao curtir: {ex.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private void EditReport(ReportViewModel report)
@@ -278,6 +284,8 @@ else
             errorMessage = $"Erro ao editar a publicação: {ex.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private void CancelEdit()
@@ -285,4 +293,21 @@ else
         isEditing = false;
         selectedReport = null;
     }
+
+    private void ShowToastMessages()
+    {
+        if (!string.IsNullOrEmpty(successMessage))
+        {
+            toast.Show("Sucesso", successMessage, "Agora");
+            successMessage = "";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            toast.Show("Erro", errorMessage, "Agora");
+            errorMessage = "";
+        }
+    }
 }
+
+
