@@ -6,6 +6,8 @@ public interface IReportRepository
 {
     Task<IEnumerable<Report>> GetListAsync();
 
+    Task<IEnumerable<Report>> GetReportsByTypeAsync(string type);
+
     Task<Report?> GetAsync(Guid id);
 
     Task<Report> AddAsync(Report report);

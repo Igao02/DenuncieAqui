@@ -16,6 +16,13 @@ public class ReportRepository : IReportRepository
 
     public async Task<IEnumerable<Report>> GetListAsync() => await _context.Reports.ToListAsync();
 
+    public async Task<IEnumerable<Report>> GetReportsByTypeAsync(string type)
+    {
+        return await _context.Reports
+            .Where(r => r.TypeReport == type)
+            .ToListAsync();
+    }
+
     public async Task<Report?> GetAsync(Guid id) => await _context.Reports.FindAsync(id);
 
     public async Task<Report> AddAsync(Report report)
