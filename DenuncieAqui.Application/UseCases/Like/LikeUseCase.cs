@@ -25,6 +25,26 @@ public class LikeUseCase
         return await _likeRepository.GetAsync(id);
     }
 
+    public async Task<IEnumerable<Like>> GetUserLikesAsync(string userName)
+    {
+        return await _likeRepository.GetUserLikesAsync(userName);
+    }
+
+    public async Task<string> GetCurrentUserNameAsync()
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+        }
+
+        var userName = user.Identity.Name;
+        return userName; // Corrigido para retornar o nome do usuário
+    }
+
+
     public async Task AddOrRemoveLikeAsync(Guid reportId)
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();

@@ -44,20 +44,42 @@
     font-size: 0.9em; 
 }
 
-#actions {
+#like-section {
     display: flex;
     justify-content: flex-start;
     margin-top: 5px;
-    margin-bottom:-25px;
+    margin-bottom: -25px;
     position: relative;
     left: 165px;
     top: -43px;
 }
 
-#likeButton {
-    position: relative;
-    left: 165px; 
-    top: -38px;  
+.btn-image {
+    height: 40px;
+    width: 60px;
+    background: none;
+    border: none;
+    color: gray; /* Cor padrão para o ícone */
+    transition: color 0.3s;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-image.liked {
+        color: red; /* Cor vermelha quando curtido */
+    }
+
+.btn-image.unliked {
+     color: gray; /* Cor cinza quando não curtido */
+}
+
+.bi-heart-fill {
+    width: 40px;
+    height: 40px;
+    fill: currentColor;
 }
 
 .comment-section {

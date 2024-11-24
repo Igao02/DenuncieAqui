@@ -68,14 +68,6 @@
                         </div>
                     </EditForm>
                 </div>
-
-                @* <div class="col-md-6 col-md-offset-2">
-                <section>
-                <h3>Use another service to register.</h3>
-                <hr />
-                <ExternalLoginPicker />
-                </section>
-                </div> *@
             </div>
         </div>
     </div>
@@ -97,9 +89,29 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
+        var existngEmail = await UserManager.FindByEmailAsync(Input.Email);
+        if (existngEmail != null)
+        {
+            identityErrors = new List<IdentityError>
+            {
+                new IdentityError {Description = "O e-mail inserido já está em uso."}
+            };
+            return;
+        };
+
+        var existingUserName = await UserManager.FindByNameAsync(Input.UserName);
+        if (existingUserName != null)
+        {
+            identityErrors = new List<IdentityError>
+            {
+                new IdentityError {Description = "O apelido inserido já está em uso."}
+            };
+            return;
+        }
+
+
         var user = CreateUser();
 
-        //await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await UserStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -157,25 +169,25 @@
 
     private sealed class InputModel
     {
-        [Required(ErrorMessage ="Campo necessário")]
+        [Required(ErrorMessage = "Campo necessário")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
 
-        [Required(ErrorMessage ="Campo necessário")]
+        [Required(ErrorMessage = "Campo necessário")]
         [DataType(DataType.Text)]
         [Display(Name = "Apelido")]
         public string UserName { get; set; } = "";
 
         [Required(ErrorMessage = "Campo necessário")]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "A {0} deve ter pelo menos {2} e o máximo {1} caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; } = "";
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "A senha e a confirmação da senha estão diferentesB.")]
+        [Compare("Password", ErrorMessage = "A senha e a confirmação da senha estão diferentes.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

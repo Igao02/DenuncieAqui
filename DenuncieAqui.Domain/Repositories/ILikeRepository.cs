@@ -8,6 +8,8 @@ public interface ILikeRepository
 
     Task<IEnumerable<Like>> GetLikesAsync();
 
+    Task<IEnumerable<Like>> GetUserLikesAsync(string userName);
+
     Task <Like> AddLikesAsync(Like like);
 
     Task RemoveLikesAsync(Guid id);

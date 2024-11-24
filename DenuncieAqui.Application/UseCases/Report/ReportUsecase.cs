@@ -61,7 +61,7 @@ public class ReportUsecase
         var userName = user.Identity.Name;
         report.UserName = userName;
 
-        if(report.UserName == null)
+        if (report.UserName == null)
         {
             throw new UnauthorizedAccessException("Nome de usuário nulo");
         }
@@ -72,7 +72,7 @@ public class ReportUsecase
         }
         else
         {
-            report.IsEvent = false;  
+            report.IsEvent = false;
         }
 
         var createdReport = await _reportRepository.AddAsync(report);
@@ -175,5 +175,21 @@ public class ReportUsecase
         return result;
     }
 
-
+    public async Task<IEnumerable<ReportViewModel>> GetReportsByTypeAsync(string type)
+    {
+        var reports = await _reportRepository.GetReportsByTypeAsync(type);
+        return reports.Select(report => new ReportViewModel
+        {
+            Id = report.Id,
+            ReportName = report.ReportName,
+            TypeReport = report.TypeReport,
+            ReportDescription = report.ReportDescription,
+            Images = report.Images,
+            Comments = report.Comments,
+            Likes = report.Likes,
+            UserName = report.UserName,
+            IsEditing = false
+        });
+    }
 }
+

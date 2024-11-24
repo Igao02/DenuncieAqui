@@ -26,6 +26,13 @@ public class LikeRepository : ILikeRepository
         return like;
     }
 
+    public async Task<IEnumerable<Like>> GetUserLikesAsync(string userName)
+    {
+        return await _context.Likes
+            .Where(l => l.UserName == userName)
+            .ToListAsync();
+    }
+
     public async Task RemoveLikesAsync(Guid id)
     {
         var like = await GetAsync(id);
@@ -33,7 +40,7 @@ public class LikeRepository : ILikeRepository
         if (like != null)
         {
             _context.Likes.Remove(like);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
     }
 
