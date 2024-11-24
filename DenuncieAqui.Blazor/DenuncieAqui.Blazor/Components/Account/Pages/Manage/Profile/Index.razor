@@ -5,6 +5,7 @@
 @using DenuncieAqui.Application.UseCases.CommentUseCase
 @using DenuncieAqui.Application.UseCases.LikeUseCase
 @using DenuncieAqui.Application.ViewModels.Report
+@using DenuncieAqui.Blazor.Client.Components.Notifications.Toast
 @using DenuncieAqui.Domain.Entities
 @using DenuncieAqui.Domain.Repositories
 
@@ -73,23 +74,33 @@
                 }
                 else
                 {
-                    <div id="post-name">
-                        <p>@report.ReportName</p>
-                    </div>
-                    <div id="post-description">
-                        <p>@report.ReportDescription</p>
+                    <div id="post-details">
+                        <div id="post-name">
+                            <label class="form-label">Nome da publicação:</label>
+                            <p>@report.ReportName</p>
+                        </div>
+                        <div id="type-report">
+                            <label class="form-label">Tipo da publicação:</label>
+                            <p>@report.TypeReport</p>
+                        </div>
+                        <div id="post-description">
+                            <label class="col-form-label">Descrição da publicação:</label>
+                            <p>@report.ReportDescription</p>
+                        </div>
                     </div>
 
                     @if (report.Images != null && report.Images.Any())
                     {
-                        @foreach (var image in report.Images)
-                        {
-                            <img src="@image.ImageUrl" alt="Post Image" class="post-image">
-                        }
+                        <div id="post-images">
+                            @foreach (var image in report.Images)
+                            {
+                                <img src="@image.ImageUrl" alt="Imagem da publicação" class="post-image">
+                            }
+                        </div>
                     }
                     else
                     {
-                        <p>No images available for this report.</p>
+                        <p>Nenhuma imagem disponível para esta publicação.</p>
                     }
                 }
 
@@ -132,22 +143,22 @@ else
     <p>Não há publicações disponíveis.</p>
 }
 
+<Toast @ref="toast" />
+
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div class="alert alert-success">
-        @successMessage
-    </div>
+    toast.Show("Sucesso", successMessage, "Agora");
 }
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">
-        @errorMessage
-    </div>
+    toast.Show("Erro", errorMessage, "Agora");
 }
 
 @code {
+    private Toast toast;
     public IEnumerable<ReportViewModel> reports;
+    public IEnumerable<ReportViewModel> filteredReports;
     public IEnumerable<Image> images;
     public IEnumerable<Comment> comments;
     public IEnumerable<Like> likes;
@@ -158,13 +169,15 @@ else
     private Dictionary<Guid, bool> dropdownState = new Dictionary<Guid, bool>();
     private bool isEditing = false;
     private ReportViewModel selectedReport;
+    private string selectedTypeFilter = "";
 
     protected override async Task OnInitializedAsync()
     {
-        reports = await _reportUseCase.GetUserReportsAsync();
+        reports = await _reportUseCase.GetReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
         likes = await _likeUseCase.GetLikesAsync();
+        await ApplyFilter();
     }
 
     private void ToggleDropdown(Guid reportId)
@@ -194,7 +207,7 @@ else
             await _reportUseCase.DeleteReportAsync(reportId);
 
             successMessage = "Publicação deletada com sucesso!";
-            reports = await _reportUseCase.GetUserReportsAsync();
+            reports = await _reportUseCase.GetReportsAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -206,6 +219,8 @@ else
             errorMessage = $"Erro ao deletar a publicação: {ex.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private async Task SubmitComment(Guid reportId)
@@ -228,6 +243,8 @@ else
             errorMessage = $"Ocorreu um erro: {ex.Message}. Inner Exception: {ex.InnerException?.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private async Task SubmitLike(Guid reportId)
@@ -249,6 +266,8 @@ else
             errorMessage = $"Erro ao curtir: {ex.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
     }
 
     private void EditReport(ReportViewModel report)
@@ -267,7 +286,7 @@ else
             errorMessage = string.Empty;
             isEditing = false;
             selectedReport = null;
-            reports = await _reportUseCase.GetUserReportsAsync();
+            reports = await _reportUseCase.GetReportsAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -279,11 +298,46 @@ else
             errorMessage = $"Erro ao editar a publicação: {ex.Message}";
             successMessage = string.Empty;
         }
+
+        ShowToastMessages();
+    }
+
+    private async Task ApplyFilter()
+    {
+        if (string.IsNullOrEmpty(selectedTypeFilter))
+        {
+            filteredReports = reports;
+        }
+        else
+        {
+            filteredReports = await _reportUseCase.GetReportsByTypeAsync(selectedTypeFilter);
+        }
+    }
+
+    private async Task OnTypeFilterChanged(ChangeEventArgs e)
+    {
+        selectedTypeFilter = e.Value.ToString();
+        await ApplyFilter();
     }
 
     private void CancelEdit()
     {
         isEditing = false;
         selectedReport = null;
+    }
+
+    private void ShowToastMessages()
+    {
+        if (!string.IsNullOrEmpty(successMessage))
+        {
+            toast.Show("Sucesso", successMessage, "Agora");
+            successMessage = "";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            toast.Show("Erro", errorMessage, "Agora");
+            errorMessage = "";
+        }
     }
 }

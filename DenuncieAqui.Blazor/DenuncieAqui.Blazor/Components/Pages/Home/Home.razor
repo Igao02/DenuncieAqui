@@ -7,6 +7,8 @@
 @using DenuncieAqui.Blazor.Client.Components.Notifications.Toast
 @using DenuncieAqui.Domain.Entities
 @using DenuncieAqui.Domain.Repositories
+@using DenuncieAqui.Infrastructure.Data
+@using Microsoft.AspNetCore.Identity
 
 @rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
@@ -14,10 +16,12 @@
 @inject CommentUseCase _commentUseCase
 @inject LikeUseCase _likeUseCase
 @inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> UserManager
+
 
 <PageTitle>Home</PageTitle>
 <div class="full-page-background"></div>
-<div class="mb-3">
+<div class="mb-3" style="max-width: 300px; float: inherit">
     <label for="typeFilter" class="form-label">Filtrar por Tipo de Publicação</label>
     <select id="typeFilter" class="form-select" @onchange="OnTypeFilterChanged">
         <option value="">Todos os Tipos</option>
@@ -35,7 +39,7 @@
         <div id="post-container">
             <div class="post-item">
                 <div id="post-header">
-                    <img src="/Images/Slogan 5.jpeg" alt="Profile Picture">
+                    <img src="/Images/incognito.svg" alt="Profile Picture">
                     <div id="user-name">@report.UserName</div>
 
                     <div class="dropdown">
@@ -84,23 +88,33 @@
                 }
                 else
                 {
-                    <div id="post-name">
-                        <p>@report.ReportName</p>
-                    </div>
-                    <div id="post-description">
-                        <p>@report.ReportDescription</p>
+                    <div id="post-details">
+                        <div id="post-name">
+                            <label class="form-label">Nome da publicação:</label>
+                            <p>@report.ReportName</p>
+                        </div>
+                        <div id="type-report">
+                            <label class="form-label">Tipo da publicação:</label>
+                            <p>@report.TypeReport</p>
+                        </div>
+                        <div id="post-description">
+                            <label class="col-form-label">Descrição da publicação:</label>
+                            <p>@report.ReportDescription</p>
+                        </div>
                     </div>
 
                     @if (report.Images != null && report.Images.Any())
                     {
-                        @foreach (var image in report.Images)
-                        {
-                            <img src="@image.ImageUrl" alt="Post Image" class="post-image">
-                        }
+                        <div id="post-images">
+                            @foreach (var image in report.Images)
+                            {
+                                <img src="@image.ImageUrl" alt="Imagem da publicação" class="post-image">
+                            }
+                        </div>
                     }
                     else
                     {
-                        <p>No images available for this report.</p>
+                        <p>Nenhuma imagem disponível para esta publicação.</p>
                     }
                 }
 
@@ -119,9 +133,14 @@
                     </div>
                 </EditForm>
 
-                <div id="actions">
-                    <button class="btn btn-primary" @onclick="() => SubmitLike(report.Id)">Like</button>
+                <div id="like-section">
+                    <button class="btn-image @GetLikeClass(report.Id)" @onclick="() => ToggleLike(report.Id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                        </svg>
+                    </button>
                 </div>
+
 
                 @if (report.Comments != null && report.Comments.Any())
                 {
@@ -170,6 +189,8 @@ else
     private bool isEditing = false;
     private ReportViewModel selectedReport;
     private string selectedTypeFilter = "";
+    private HashSet<Guid> likedReports = new HashSet<Guid>();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -177,6 +198,19 @@ else
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
         likes = await _likeUseCase.GetLikesAsync();
+
+        try
+        {
+            var userName = await _likeUseCase.GetCurrentUserNameAsync();
+            var userLikes = await _likeUseCase.GetUserLikesAsync(userName);
+            likedReports = new HashSet<Guid>(userLikes.Select(like => like.ReportId));
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
+
         await ApplyFilter();
     }
 
@@ -245,6 +279,20 @@ else
         }
 
         ShowToastMessages();
+    }
+
+    private async Task ToggleLike(Guid reportId)
+    {
+        if (likedReports.Contains(reportId))
+        {
+            likedReports.Remove(reportId);
+        }
+        else
+        {
+            likedReports.Add(reportId);
+        }
+
+        await SubmitLike(reportId);
     }
 
     private async Task SubmitLike(Guid reportId)
@@ -340,6 +388,12 @@ else
             errorMessage = "";
         }
     }
+
+    private string GetLikeClass(Guid reportId)
+    {
+        return likedReports.Contains(reportId) ? "liked" : "unliked";
+    }
+
 }
 
 
