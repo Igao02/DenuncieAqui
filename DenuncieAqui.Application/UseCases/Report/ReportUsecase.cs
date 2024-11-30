@@ -196,16 +196,17 @@ public class ReportUsecase
         });
     }
 
-    public async Task<bool> IsPartnerAsync(string userName)
+    public async Task<Dictionary<string, bool>> GetPartnersStatusAsync(IEnumerable<string> userNames)
     {
-        var user = await _userManager.FindByNameAsync(userName); 
+        var userStatuses = new Dictionary<string, bool>();
 
-        if (user == null)
+        foreach (var userName in userNames.Distinct()) 
         {
-            return false;
+            var user = await _userManager.FindByNameAsync(userName); 
+            userStatuses[userName] = user != null && await _userManager.IsInRoleAsync(user, "PARTNER");
         }
 
-        return await _userManager.IsInRoleAsync(user, "PARTNER");
+        return userStatuses; 
     }
 
 

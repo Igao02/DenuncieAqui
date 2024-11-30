@@ -204,7 +204,6 @@ else
     private bool isUserPartner;
     private Dictionary<string, bool> userPartnerStatus = new Dictionary<string, bool>();
 
-
     protected override async Task OnInitializedAsync()
     {
         reports = await _reportUseCase.GetReportsAsync();
@@ -224,16 +223,9 @@ else
             successMessage = string.Empty;
         }
 
-        foreach (var report in reports)
-        {
-            var isPartner = await _reportUseCase.IsPartnerAsync(report.UserName);
+        var userNames = reports.Select(report => report.UserName).Distinct();
 
-            if (!userPartnerStatus.ContainsKey(report.UserName))
-            {
-                userPartnerStatus[report.UserName] = isPartner;
-            }
-        }
-
+        userPartnerStatus = await _reportUseCase.GetPartnersStatusAsync(userNames);
 
         await ApplyFilter();
     }
