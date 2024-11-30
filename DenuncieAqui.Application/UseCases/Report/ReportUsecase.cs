@@ -3,6 +3,8 @@ using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
 using DenuncieAqui.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace DenuncieAqui.Application.UseCases.ReportUseCase;
 
@@ -11,12 +13,14 @@ public class ReportUsecase
     private readonly IReportRepository _reportRepository;
     private readonly AuthenticationStateProvider _authenticationStateProvider;
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ReportUsecase(IReportRepository reportRepository, AuthenticationStateProvider authenticationStateProvider, ApplicationDbContext context)
+    public ReportUsecase(IReportRepository reportRepository, AuthenticationStateProvider authenticationStateProvider, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _reportRepository = reportRepository;
         _authenticationStateProvider = authenticationStateProvider;
         _context = context;
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<ReportViewModel>> GetReportsAsync()
@@ -191,5 +195,19 @@ public class ReportUsecase
             IsEditing = false
         });
     }
+
+    public async Task<bool> IsPartnerAsync(string userName)
+    {
+        var user = await _userManager.FindByNameAsync(userName); 
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        return await _userManager.IsInRoleAsync(user, "PARTNER");
+    }
+
+
 }
 
