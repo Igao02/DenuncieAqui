@@ -14,12 +14,13 @@ public class ReportRepository : IReportRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Report>> GetListAsync() => await _context.Reports.ToListAsync();
+    public async Task<IEnumerable<Report>> GetListAsync() => await _context.Reports.OrderByDescending(r => r.ReportsDate).ToListAsync();
 
     public async Task<IEnumerable<Report>> GetReportsByTypeAsync(string type)
     {
         return await _context.Reports
             .Where(r => r.TypeReport == type)
+            .OrderByDescending(r => r.ReportsDate)
             .ToListAsync();
     }
 
@@ -29,7 +30,7 @@ public class ReportRepository : IReportRepository
     {
         await _context.AddAsync(report);
 
-        await _context.SaveChangesAsync(); 
+        await _context.SaveChangesAsync();
 
         return report;
     }
@@ -49,7 +50,7 @@ public class ReportRepository : IReportRepository
 
         await _context.SaveChangesAsync();
 
-        return report; 
+        return report;
     }
 
 }

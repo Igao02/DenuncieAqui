@@ -57,6 +57,10 @@
                             </div>
                         }
                     </div>
+
+                    <div id="post-date">
+                        @report.ReportsDate.ToString("dd/MM/yyyy HH:mm")
+                    </div>
                 </div>
 
                 @if (report.IsEditing && selectedReport != null)

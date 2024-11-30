@@ -43,6 +43,11 @@
                             </div>
                         }
                     </div>
+
+                    <div id="post-date">
+                        @report.ReportsDate.ToString("dd/MM/yyyy HH:mm")
+                    </div>
+
                 </div>
 
                 @if (report.IsEditing && selectedReport != null)
@@ -119,8 +124,12 @@
                     </div>
                 </EditForm>
 
-                <div id="actions">
-                    <button class="btn btn-primary" @onclick="() => SubmitLike(report.Id)">Like</button>
+                <div id="like-section">
+                    <button class="btn-image @GetLikeClass(report.Id)" @onclick="() => ToggleLike(report.Id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                        </svg>
+                    </button>
                 </div>
 
                 @if (report.Comments != null && report.Comments.Any())
@@ -170,13 +179,27 @@ else
     private bool isEditing = false;
     private ReportViewModel selectedReport;
     private string selectedTypeFilter = "";
+    private HashSet<Guid> likedReports = new HashSet<Guid>();
+
 
     protected override async Task OnInitializedAsync()
     {
-        reports = await _reportUseCase.GetReportsAsync();
+        reports = await _reportUseCase.GetUserReportsAsync();
         images = await _imageUseCase.GetImagesAsync();
         comments = await _commentUseCase.GetCommentsAsync();
         likes = await _likeUseCase.GetLikesAsync();
+
+        try
+        {
+            var userName = await _likeUseCase.GetCurrentUserNameAsync();
+            var userLikes = await _likeUseCase.GetUserLikesAsync(userName);
+            likedReports = new HashSet<Guid>(userLikes.Select(like => like.ReportId));
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Usuário não autenticado.";
+            successMessage = string.Empty;
+        }
         await ApplyFilter();
     }
 
@@ -270,6 +293,20 @@ else
         ShowToastMessages();
     }
 
+    private async Task ToggleLike(Guid reportId)
+    {
+        if (likedReports.Contains(reportId))
+        {
+            likedReports.Remove(reportId);
+        }
+        else
+        {
+            likedReports.Add(reportId);
+        }
+
+        await SubmitLike(reportId);
+    }
+
     private void EditReport(ReportViewModel report)
     {
         selectedReport = report;
@@ -339,5 +376,9 @@ else
             toast.Show("Erro", errorMessage, "Agora");
             errorMessage = "";
         }
+    }
+    private string GetLikeClass(Guid reportId)
+    {
+        return likedReports.Contains(reportId) ? "liked" : "unliked";
     }
 }

@@ -36,7 +36,7 @@ public class ReportUsecase
             TypeReport = x.TypeReport,
             IsEditing = false,
             IsEvent = false,
-        }).ToList();
+        }).OrderByDescending(r => r.ReportsDate).ToList();
 
         return result;
     }
@@ -170,7 +170,7 @@ public class ReportUsecase
             TypeReport = x.TypeReport,
             IsEditing = false,
             IsEvent = false,
-        }).ToList();
+        }).OrderByDescending(r => r.ReportsDate).ToList();
 
         return result;
     }

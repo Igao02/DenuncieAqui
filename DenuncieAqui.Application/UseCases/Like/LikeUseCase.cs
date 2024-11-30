@@ -41,7 +41,7 @@ public class LikeUseCase
         }
 
         var userName = user.Identity.Name;
-        return userName; // Corrigido para retornar o nome do usuário
+        return userName; 
     }
 
 

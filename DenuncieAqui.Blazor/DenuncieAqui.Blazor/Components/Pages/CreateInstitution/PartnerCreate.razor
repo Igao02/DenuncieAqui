@@ -46,6 +46,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="City">Cidade</label>
+                        <InputText id="City" class="form-control" @bind-Value="Model.City" />
+                    </div>
+
+                    <div class="form-group">
                         <label for="Street">Rua</label>
                         <InputText id="Street" class="form-control" @bind-Value="Model.Street" />
                     </div>
@@ -90,6 +95,7 @@
                 Model.CorporateName,
                 Model.Document,
                 Model.Cep,
+                Model.City,
                 Model.Street,
                 Model.NumHome,
                 Model.Complement!,
@@ -125,6 +131,7 @@
                     Model.Street = addressInfo.logradouro;
                     Model.Neighborhood = addressInfo.bairro;
                     Model.Uf = addressInfo.uf;
+                    Model.City = addressInfo.localidade;
                 }
                 else
                 {
@@ -152,6 +159,7 @@
         public string logradouro { get; set; } = "";
         public string bairro { get; set; } = "";
         public string uf { get; set; } = "";
+        public string localidade { get; set; } = "";
         public string erro { get; set; } = "";
     }
 }

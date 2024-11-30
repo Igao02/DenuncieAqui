@@ -59,7 +59,7 @@
     width: 60px;
     background: none;
     border: none;
-    color: gray; /* Cor padrão para o ícone */
+    color: gray; 
     transition: color 0.3s;
     cursor: pointer;
     padding: 0;
@@ -69,11 +69,11 @@
 }
 
     .btn-image.liked {
-        color: red; /* Cor vermelha quando curtido */
+        color: red; 
     }
 
 .btn-image.unliked {
-     color: gray; /* Cor cinza quando não curtido */
+     color: gray; 
 }
 
 .bi-heart-fill {
@@ -114,4 +114,11 @@
 
 .dropdown-menu.show {
     display: block; 
+}
+
+#post-date {
+    font-size: 0.9em;
+    color: #6c757d; 
+    white-space: nowrap; 
+    margin-left: auto; 
 }
