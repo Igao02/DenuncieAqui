@@ -32,12 +32,18 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
         {
             var uploadedImages = new List<Image>();
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var maxFileSizeInBytes = 1024 * 1024 * 10;
 
             foreach (var file in files)
             {
                 if (file == null || file.Length == 0)
                 {
                     throw new ArgumentException("Nenhum arquivo selecionado");
+                }
+
+                if (file.Length > maxFileSizeInBytes)
+                {
+                    throw new ArgumentException("Arquivo excede o tamanho máximo permitido");
                 }
 
                 if (!Directory.Exists(_imageStoragePath))
@@ -49,7 +55,7 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
 
                 if (!allowedExtensions.Contains(fileExtension))
                 {
-                    throw new ArgumentException("Unsupported file type");
+                    throw new ArgumentException("Tipo de arquivo não suportado");
                 }
 
                 var fileName = Path.GetFileName(file.FileName);
@@ -57,13 +63,19 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
 
                 try
                 {
+                    Console.WriteLine("Iniciando cópia do arquivo...");
+
                     using var memoryStream = new MemoryStream();
                     await file.CopyToAsync(memoryStream);
                     var fileBytes = memoryStream.ToArray();
 
+                    Console.WriteLine("Arquivo copiado para o MemoryStream.");
+
                     using var fs = System.IO.File.Create(filePath);
                     fs.Write(fileBytes, 0, fileBytes.Length);
                     await memoryStream.CopyToAsync(fs);
+
+                    Console.WriteLine("Arquivo salvo no sistema de arquivos.");
 
                     var imageUrl = $"/ReportImages/Uploads/{fileName}";
                     var imageDate = DateTime.Now;
@@ -72,9 +84,12 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
 
                     var uploadImages = await _imageRepository.AddImageAsync(image);
                     uploadedImages.Add(uploadImages);
+
+                    Console.WriteLine("Imagem adicionada ao repositório.");
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"Erro ao salvar a imagem: {ex.Message}");
                     throw new ArgumentException($"Erro ao salvar a imagem: {ex.Message}");
                 }
             }
@@ -85,17 +100,6 @@ namespace DenuncieAqui.Application.UseCases.ImageUseCase
         public async Task DeleteImageAsync(Guid id)
         {
             await _imageRepository.DeleteImageAsync(id);
-
-            //var image = await _imageRepository.GetImageByIdAsync(id);
-            //if (image != null)
-            //{
-            //    var filePath = Path.Combine(_imageStoragePath, image.ImageUrl);
-            //    if (File.Exists(filePath))
-            //    {
-            //        File.Delete(filePath);
-            //    }
-            //    await _imageRepository.DeleteImageAsync(id);
-            //}
         }
     }
 }

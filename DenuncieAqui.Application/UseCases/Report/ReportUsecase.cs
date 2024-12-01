@@ -208,7 +208,5 @@ public class ReportUsecase
 
         return userStatuses; 
     }
-
-
 }
 

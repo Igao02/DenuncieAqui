@@ -257,7 +257,9 @@ else
             await _reportUseCase.DeleteReportAsync(reportId);
 
             successMessage = "Publicação deletada com sucesso!";
-            reports = await _reportUseCase.GetReportsAsync();
+
+            reports = reports.Where(report => report.Id != reportId).ToList();
+            filteredReports = filteredReports.Where(report => report.Id != reportId).ToList();
         }
         catch (UnauthorizedAccessException)
         {
@@ -270,8 +272,9 @@ else
             successMessage = string.Empty;
         }
 
-        ShowToastMessages();
+        await InvokeAsync(StateHasChanged);
     }
+
 
     private async Task SubmitComment(Guid reportId)
     {
