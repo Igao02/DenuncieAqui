@@ -40,7 +40,14 @@
             <div class="post-item">
                 <div id="post-header">
                     <img src="/Images/incognito.svg" alt="Profile Picture">
-                    <div id="user-name">@report.UserName</div>
+                    <div id="user-name">
+                        @report.UserName
+                        @if (userPartnerStatus.ContainsKey(report.UserName) && userPartnerStatus[report.UserName])
+                        {
+                            <img src="/Images/patch-check.svg" />
+                        }
+                    </div>
+
 
                     <div class="dropdown">
                         <button class="btn btn-link" @onclick="() => ToggleDropdown(report.Id)">
@@ -56,6 +63,10 @@
                                 <button class="dropdown-item" @onclick="() => EditReport(report)">Editar publicação</button>
                             </div>
                         }
+                    </div>
+
+                    <div id="post-date">
+                        @report.ReportsDate.ToString("dd/MM/yyyy HH:mm")
                     </div>
                 </div>
 
@@ -190,7 +201,8 @@ else
     private ReportViewModel selectedReport;
     private string selectedTypeFilter = "";
     private HashSet<Guid> likedReports = new HashSet<Guid>();
-
+    private bool isUserPartner;
+    private Dictionary<string, bool> userPartnerStatus = new Dictionary<string, bool>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -210,6 +222,10 @@ else
             errorMessage = "Usuário não autenticado.";
             successMessage = string.Empty;
         }
+
+        var userNames = reports.Select(report => report.UserName).Distinct();
+
+        userPartnerStatus = await _reportUseCase.GetPartnersStatusAsync(userNames);
 
         await ApplyFilter();
     }
@@ -241,7 +257,9 @@ else
             await _reportUseCase.DeleteReportAsync(reportId);
 
             successMessage = "Publicação deletada com sucesso!";
-            reports = await _reportUseCase.GetReportsAsync();
+
+            reports = reports.Where(report => report.Id != reportId).ToList();
+            filteredReports = filteredReports.Where(report => report.Id != reportId).ToList();
         }
         catch (UnauthorizedAccessException)
         {
@@ -254,8 +272,9 @@ else
             successMessage = string.Empty;
         }
 
-        ShowToastMessages();
+        await InvokeAsync(StateHasChanged);
     }
+
 
     private async Task SubmitComment(Guid reportId)
     {

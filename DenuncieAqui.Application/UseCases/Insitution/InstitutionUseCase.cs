@@ -33,7 +33,7 @@ public class InstitutionUseCase
         return await _institutionRepository.GetAsync(id);
     }
 
-    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string street, int numHome, string complement, string neighborhood, string uf)
+    public async Task<Institution> CreateInstitutionAsync(Institution institution, string corporateName, string document, string cep, string city, string street, int numHome, string complement, string neighborhood, string uf)
     {
         var existingInstName = await _institutionRepository.GetByNameAsync(institution.CorporateName);
 
@@ -56,6 +56,7 @@ public class InstitutionUseCase
             CorporateName = corporateName,
             Document = document,
             Cep = cep,
+            City = city,
             Street = street,
             NumHome = numHome,
             CreationDate = DateTime.Now,

@@ -4,6 +4,7 @@
 @using DenuncieAqui.Domain.Entities
 @using Microsoft.AspNetCore.Mvc
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Diagnostics
 
 @rendermode InteractiveServer
 @inject ReportUsecase _reportUseCase
@@ -15,7 +16,7 @@
 <div class="full-page-background"></div>
 <div id="post-container">
     <div id="user-profile">
-        <img src="/Images/Slogan 5.jpeg" alt="User Avatar" id="user-avatar" class="mb-2">
+        <img src="/Images/incognito.svg" alt="User Avatar" id="user-avatar" class="mb-2">
         <AuthorizeView>
             <Authorized>
                 <NavLink class="nav-link" href="Account/Manage">
@@ -38,7 +39,7 @@
         <div class="mb-3">
             <label class="form-label">Tipo de Publicação</label>
             <InputSelect @bind-Value="Model.TypeReport" class="form-select" @onchange="OnTypeReportChanged">
-                <option value="" disabled>Selecione o tipo de publicação</option>
+                <option value="" disabled selected>Selecione o tipo de publicação</option>
                 <AuthorizeView Context="authContext" Roles="PARTNER">
                     <option value="Evento">Evento</option>
                 </AuthorizeView>
@@ -62,7 +63,7 @@
         <div class="image-preview-container">
             @foreach (var imageUrl in imagePreviewUrls)
             {
-                <img src="@imageUrl" alt="Image Preview" class="img-thumbnail" style="max-width: 200px; margin: 5px;" />
+                <img src="@imageUrl" alt="Image Preview" class="img-thumbnail" />
             }
         </div>
 
@@ -130,53 +131,119 @@
             StateHasChanged();
         }
 
-        Navi.NavigateTo("/");
+        // Navi.NavigateTo("/");
     }
 
     private async Task HandleSelectedFiles(InputFileChangeEventArgs e)
     {
-        selectedFiles = e.GetMultipleFiles().ToList();
+        const long MaxFileSize = 10 * 1024 * 1024; 
+        const int BufferSize = 8192; 
+        selectedFiles = new List<IBrowserFile>();
         imagePreviewUrls.Clear();
 
-        foreach (var file in selectedFiles)
+        try
         {
-            var buffer = new byte[file.Size];
-            await file.OpenReadStream().ReadAsync(buffer);
+            Console.WriteLine("Selecionando arquivos...");
 
-            var imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
-            imagePreviewUrls.Add(imageUrl);
+            foreach (var file in e.GetMultipleFiles())
+            {
+                if (file.Size > MaxFileSize)
+                {
+                    Console.WriteLine($"O arquivo {file.Name} excede o tamanho permitido de 10 MB.");
+                    continue;
+                }
+
+                selectedFiles.Add(file);
+
+                using var stream = file.OpenReadStream(maxAllowedSize: MaxFileSize);
+                using var memoryStream = new MemoryStream();
+                var buffer = new byte[BufferSize];
+                int bytesRead;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                {
+                    memoryStream.Write(buffer, 0, bytesRead);
+                }
+
+                var imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
+                imagePreviewUrls.Add(imageUrl);
+            }
+
+            Console.WriteLine("Arquivos processados com sucesso.");
+            StateHasChanged();
         }
-
-        StateHasChanged();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao selecionar arquivos: {ex.Message}");
+        }
     }
 
 
     private async Task UploadImages()
     {
         var formFiles = new List<IFormFile>();
+        var maxFileSize = 10 * 1024 * 1024;
+        var bufferSize = 8192;
+        var stopwatch = Stopwatch.StartNew();
 
-        foreach (var file in selectedFiles)
+        try
         {
-            using var stream = file.OpenReadStream();
-            using var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            ModelImage.ConteudoArquivo = memoryStream.ToArray();
+            Console.WriteLine("Iniciando o upload das imagens...");
+            Console.WriteLine($"Quantidade de arquivos selecionados: {selectedFiles.Count}");
 
-            var formFile = new FormFile(new MemoryStream(ModelImage.ConteudoArquivo), 0, ModelImage.ConteudoArquivo.Length,
-            file.Name, file.Name)
+            foreach (var file in selectedFiles)
+            {
+                if (file.Size > maxFileSize)
                 {
-                    Headers = new HeaderDictionary(),
-                    ContentType = file.ContentType
-                };
+                    Console.WriteLine($"O arquivo {file.Name} excede o tamanho permitido de 10 MB.");
+                    continue;
+                }
 
-            formFiles.Add(formFile);
+                Console.WriteLine($"Processando o arquivo: {file.Name}, Tamanho: {file.Size} bytes");
+
+                using var stream = file.OpenReadStream(maxAllowedSize: maxFileSize);
+                using var memoryStream = new MemoryStream();
+                var buffer = new byte[bufferSize];
+                int bytesRead;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                {
+                    memoryStream.Write(buffer, 0, bytesRead);
+                }
+
+                var fileContent = memoryStream.ToArray();
+                var formFile = new FormFile(new MemoryStream(fileContent), 0, fileContent.Length, file.Name, file.Name)
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = file.ContentType
+                    };
+
+                formFiles.Add(formFile);
+            }
+
+            if (formFiles.Any())
+            {
+                Console.WriteLine("Iniciando o envio das imagens para o servidor...");
+                await _imageUseCase.UploadImagesAsync(formFiles, Model.Id);
+                Console.WriteLine("Upload concluído com sucesso.");
+            }
+            else
+            {
+                Console.WriteLine("Nenhuma imagem foi enviada. Verifique os arquivos selecionados.");
+            }
         }
-
-        if (formFiles.Any())
+        catch (Exception ex)
         {
-            await _imageUseCase.UploadImagesAsync(formFiles, Model.Id);
+            Console.WriteLine($"Erro ao fazer upload das imagens: {ex.Message}");
+        }
+        finally
+        {
+            stopwatch.Stop();
+            Console.WriteLine($"Tempo total para upload: {stopwatch.ElapsedMilliseconds} ms");
         }
     }
+
+
 
     private void OnTypeReportChanged(ChangeEventArgs e)
     {

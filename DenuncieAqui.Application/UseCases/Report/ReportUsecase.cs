@@ -3,6 +3,8 @@ using DenuncieAqui.Domain.Entities;
 using DenuncieAqui.Domain.Repositories;
 using DenuncieAqui.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace DenuncieAqui.Application.UseCases.ReportUseCase;
 
@@ -11,12 +13,14 @@ public class ReportUsecase
     private readonly IReportRepository _reportRepository;
     private readonly AuthenticationStateProvider _authenticationStateProvider;
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ReportUsecase(IReportRepository reportRepository, AuthenticationStateProvider authenticationStateProvider, ApplicationDbContext context)
+    public ReportUsecase(IReportRepository reportRepository, AuthenticationStateProvider authenticationStateProvider, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _reportRepository = reportRepository;
         _authenticationStateProvider = authenticationStateProvider;
         _context = context;
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<ReportViewModel>> GetReportsAsync()
@@ -36,7 +40,7 @@ public class ReportUsecase
             TypeReport = x.TypeReport,
             IsEditing = false,
             IsEvent = false,
-        }).ToList();
+        }).OrderByDescending(r => r.ReportsDate).ToList();
 
         return result;
     }
@@ -170,7 +174,7 @@ public class ReportUsecase
             TypeReport = x.TypeReport,
             IsEditing = false,
             IsEvent = false,
-        }).ToList();
+        }).OrderByDescending(r => r.ReportsDate).ToList();
 
         return result;
     }
@@ -190,6 +194,19 @@ public class ReportUsecase
             UserName = report.UserName,
             IsEditing = false
         });
+    }
+
+    public async Task<Dictionary<string, bool>> GetPartnersStatusAsync(IEnumerable<string> userNames)
+    {
+        var userStatuses = new Dictionary<string, bool>();
+
+        foreach (var userName in userNames.Distinct()) 
+        {
+            var user = await _userManager.FindByNameAsync(userName); 
+            userStatuses[userName] = user != null && await _userManager.IsInRoleAsync(user, "PARTNER");
+        }
+
+        return userStatuses; 
     }
 }
 

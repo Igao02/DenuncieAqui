@@ -30,6 +30,11 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
              .IsRequired();
 
         builder
+            .Property(i => i.City)
+            .HasMaxLength(150)
+            .IsRequired();
+
+        builder
             .Property(i => i.Street)
             .HasMaxLength(150)
             .IsRequired();
