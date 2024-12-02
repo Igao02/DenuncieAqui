@@ -21,10 +21,9 @@
 
 <PageTitle>Home</PageTitle>
 <div class="full-page-background"></div>
-<div class="mb-3" style="max-width: 300px; float: inherit">
-    <label for="typeFilter" class="form-label">Filtrar por Tipo de Publicação</label>
+<div id="filter">
     <select id="typeFilter" class="form-select" @onchange="OnTypeFilterChanged">
-        <option value="">Todos os Tipos</option>
+        <option value="">Todos os Tipos de publicações</option>
         <option value="Evento">Eventos</option>
         <option value="Racismo">Discriminação racial</option>
         <option value="Discriminação feminina">Discriminação feminina</option>
