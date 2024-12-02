@@ -131,7 +131,7 @@
             StateHasChanged();
         }
 
-        // Navi.NavigateTo("/");
+        Navi.NavigateTo("/");
     }
 
     private async Task HandleSelectedFiles(InputFileChangeEventArgs e)
@@ -177,7 +177,6 @@
             Console.WriteLine($"Erro ao selecionar arquivos: {ex.Message}");
         }
     }
-
 
     private async Task UploadImages()
     {
@@ -242,8 +241,6 @@
             Console.WriteLine($"Tempo total para upload: {stopwatch.ElapsedMilliseconds} ms");
         }
     }
-
-
 
     private void OnTypeReportChanged(ChangeEventArgs e)
     {

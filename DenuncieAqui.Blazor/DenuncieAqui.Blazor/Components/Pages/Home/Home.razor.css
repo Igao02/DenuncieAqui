@@ -68,9 +68,9 @@
     justify-content: center;
 }
 
-    .btn-image.liked {
-        color: red; 
-    }
+.btn-image.liked {
+    color: red; 
+}
 
 .btn-image.unliked {
      color: gray; 
@@ -121,4 +121,28 @@
     color: #6c757d; 
     white-space: nowrap; 
     margin-left: auto; 
+}
+
+.partner-post {
+    background-color: #ffe6f0; 
+    border: 1px solid #ffccd5; 
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; 
+}
+
+@media (min-width: 1025px) and (max-width: 1440px){
+    #filter {
+        max-width: 400px;
+        margin-left: 55px;
+        margin-bottom: 20px;
+    }
+}
+
+@media (min-width: 1441px) {
+    #filter {
+        max-width: 400px;
+        margin-left: 310px;
+        margin-bottom: 20px;
+    }
 }

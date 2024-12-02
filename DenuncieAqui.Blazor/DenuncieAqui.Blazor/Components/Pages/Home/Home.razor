@@ -21,10 +21,9 @@
 
 <PageTitle>Home</PageTitle>
 <div class="full-page-background"></div>
-<div class="mb-3" style="max-width: 300px; float: inherit">
-    <label for="typeFilter" class="form-label">Filtrar por Tipo de Publicação</label>
+<div id="filter">
     <select id="typeFilter" class="form-select" @onchange="OnTypeFilterChanged">
-        <option value="">Todos os Tipos</option>
+        <option value="">Todos os Tipos de publicações</option>
         <option value="Evento">Eventos</option>
         <option value="Racismo">Discriminação racial</option>
         <option value="Discriminação feminina">Discriminação feminina</option>
@@ -37,7 +36,7 @@
     @foreach (var report in filteredReports)
     {
         <div id="post-container">
-            <div class="post-item">
+            <div class="post-item @(userPartnerStatus.ContainsKey(report.UserName) && userPartnerStatus[report.UserName] ? "partner-post" : "")">
                 <div id="post-header">
                     <img src="/Images/incognito.svg" alt="Profile Picture">
                     <div id="user-name">
@@ -47,7 +46,6 @@
                             <img src="/Images/patch-check.svg" />
                         }
                     </div>
-
 
                     <div class="dropdown">
                         <button class="btn btn-link" @onclick="() => ToggleDropdown(report.Id)">
